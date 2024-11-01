@@ -12,6 +12,7 @@ httpie = "*"
 requests = "*"
 httpx = "*"
 pytest = "*"
+sqlmodel = "*"
 
 [dev-packages]
 
