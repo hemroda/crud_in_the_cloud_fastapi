@@ -79,6 +79,19 @@ Got ot `http://127.0.0.1:8000`
 docker-compose up -d --build
 ```
 
+## Specs
+
+* Run all the specs in Docker
+
+```sh
+docker-compose exec backend pytest -v
+```
+
+* Run a specific test file in Docker
+```sh
+docker-compose exec backend pytest -v test/unit/service/*.py
+```
+
 ### Documentation
 
 Got to `http://127.0.0.1:8000/doc`

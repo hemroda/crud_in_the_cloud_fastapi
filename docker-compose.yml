@@ -3,13 +3,13 @@ services:
     build: ./backend
     volumes:
       - ./backend/:/usr/src/backend/
-    # entrypoint: ["sh", "/usr/src/backend/entrypoint.sh"]
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
     env_file:
       - ./backend/.env.dev
     environment:
+      PYTHONPATH: /usr/src/backend
       DATABASE_URL: postgresql://pguser:pguserpassword@db:5432/crud_in_the_cloud_db
     depends_on:
       - db

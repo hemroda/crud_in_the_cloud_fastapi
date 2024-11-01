@@ -25,6 +25,9 @@ _books = [
             can help build modern, manageable, and fast microservices.        
         """
         ),
+    Book(id=3,
+        title="Building Python Web APIs with FastAPI",
+        description="Book #1's description"),
     ]
 
 
