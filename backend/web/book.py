@@ -1,35 +1,30 @@
 from fastapi import APIRouter
 
-# from models.book import Book
+from models.book import Book
+import data.book as service
 
 router = APIRouter(prefix = "/books")
 
-# BOOKS
-BOOKS = [
-    {"id": 1, "title": "Book 1 title", "author": "Author 1", "description": "Book 1 description", "category": "math"},
-    {"id": 2, "title": "Book 2 title", "author": "Author 2", "description": "Book 2 description", "category": "history"},
-    {"id": 3, "title": "Book 3 title", "author": "Author 1", "description": "Book 3 description", "category": "math"},
-]
-
 @router.get("/")
-async def get_books():
+def get_all() -> list[Book]:
+    return service.get_all()
 
-    return { "books": BOOKS }
+@router.get("/{id}")
+def get_one(id) -> Book | None:
+    return service.get_one(id)
 
-@router.get("/{book_id:int}")
-async def get_book_by_id(book_id: int):
-    for book in BOOKS:
-        if book.get("id") == book_id:
-            
-            return {"book": book}
+@router.post("/")
+def create(book: Book) -> Book:
+    return service.create(book)
 
-    return {"message": "The book is not found."}
+@router.patch("/")
+def modify(book: Book) -> Book:
+    return service.modify(book)
 
-@router.get("/{book_title:str}")
-async def get_book_by_title(book_title: str):
-    for book in BOOKS:
-        if book.get("title").casefold() == book_title.casefold():
+@router.put("/")
+def replace(book: Book) -> Book:
+    return service.replace(book)
 
-            return {"book": book}
-
-    return {"message": "The book is not found."}
+@router.delete("/{id}")
+def delete(id: int):
+    return service.delete(id)
