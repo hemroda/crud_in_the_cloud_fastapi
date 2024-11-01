@@ -3,6 +3,7 @@ from database import Base, engine, get_db
 from sqlalchemy.orm import Session
 
 from web import book
+from web import creature
 from web import explorer
 from web import task
 
@@ -18,6 +19,7 @@ async def root(db: Session = Depends(get_db)):
     return {"message": "Vroum vroum API"}
 
 app.include_router(book.router)
+app.include_router(creature.router)
 app.include_router(explorer.router)
 app.include_router(task.router)
 
