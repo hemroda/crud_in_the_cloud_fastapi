@@ -12,6 +12,7 @@ httpie = "*"
 requests = "*"
 httpx = "*"
 pytest = "*"
+jinja2 = "*"
 
 [dev-packages]
 

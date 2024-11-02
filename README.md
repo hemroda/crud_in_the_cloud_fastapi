@@ -79,6 +79,12 @@ Got ot `http://127.0.0.1:8000`
 docker-compose up -d --build
 ```
 
+### Install new packages
+
+```sh
+ docker-compose exec backend pipenv install name_of_the_package
+```
+
 ## Specs
 
 * Run all the specs in Docker
