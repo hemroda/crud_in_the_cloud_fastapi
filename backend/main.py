@@ -1,17 +1,20 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 from core.database import init_db
-from web import book, task, website
+from web import book, task, user, website
 
-# Initialize the FastAPI app
-app = FastAPI()
 
 # Create the tables on startup
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     init_db()
+    yield
+
+# Initialize the FastAPI app
+app = FastAPI(lifespan=lifespan)
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -26,6 +29,7 @@ app.add_middleware(
 # Include routers for different modules
 app.include_router(book.router)
 app.include_router(task.router)
+app.include_router(user.router)
 app.include_router(website.router)
 
 if __name__ == "__main__":

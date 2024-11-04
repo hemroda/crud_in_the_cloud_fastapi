@@ -1,21 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlmodel import Session
 
+from core.database import get_session
 from models.book import Book
 import data.book as service
 
 router = APIRouter(prefix = "/books")
 
-@router.get("/")
-def get_all() -> list[Book]:
-    return service.get_all()
+@router.get("/", response_model=list[Book])
+def get_all(session: Session = Depends(get_session)) -> list[Book]:
+    return service.get_all(session)
 
 @router.get("/{id}")
 def get_one(id) -> Book | None:
     return service.get_one(id)
 
 @router.post("/")
-def create(book: Book) -> Book:
-    return service.create(book)
+def create(book: Book, session: Session = Depends(get_session)) -> Book:
+    return service.create(book, session)
 
 @router.patch("/")
 def modify(book: Book) -> Book:

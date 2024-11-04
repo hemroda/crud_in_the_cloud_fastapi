@@ -9,7 +9,7 @@ from core.database import get_session
 def get_all(session: Session = Depends(get_session)) -> list[Task]:
     """Retrieve all tasks from the database."""
     statement = select(Task)
-    tasks = session.exec(statement).all()  # Use the session instance to execute
+    tasks = session.exec(statement).all()
     return [Task(name=task.name, description=task.description, id=task.id) for task in tasks]
 
 def get_one(id: int, session: Session) -> Task | None:
@@ -25,7 +25,7 @@ def get_one_by_name(name: str) -> Task | None:
     return None
 
 def create(task_data: Task, session: Session) -> Task:
-    task = Task(name=task_data.name, description=task_data.description, id=task_data.id, user_id=task_data.user_id)
+    task = Task(name=task_data.name, description=task_data.description, user_id=task_data.user_id)
     session.add(task)
     session.commit()
     session.refresh(task)
