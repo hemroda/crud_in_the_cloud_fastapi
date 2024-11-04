@@ -1,21 +1,16 @@
+from fastapi import Depends
+from sqlmodel import Session, select
+
 from models.task import Task
 
-
-_tasks = [
-    Task(id=1,
-        name="Learn Python",
-        description="Master vanilla Python up to OOP."
-        ),
-    Task(id=2,
-        name="Learn FastAPI",
-        description="Leearn to create robust APIs."
-        ),
-    ]
+from core.database import get_session
 
 
-def get_all() -> list[Task]:
-    """ Return all tasks """
-    return _tasks
+def get_all(session: Session = Depends(get_session)) -> list[Task]:
+    """Retrieve all tasks from the database."""
+    statement = select(Task)
+    tasks = session.exec(statement).all()  # Use the session instance to execute
+    return [Task(name=task.name, description=task.description, id=task.id) for task in tasks]
 
 def get_one(id: int) -> Task | None:
     for _task in _tasks:
@@ -29,8 +24,12 @@ def get_one_by_name(name: str) -> Task | None:
             return _task
     return None
 
-def create(task: Task) -> Task:
+def create(task: Task, session: Session = Depends(get_session)) -> Task:
     """Add a task"""
+    task = Task(name=task.name, description=task.description)
+    session.add(task)
+    session.commit()
+    session.refresh(task)
     return task
 
 def modify(task: Task) -> Task:

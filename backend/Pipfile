@@ -13,6 +13,7 @@ requests = "*"
 httpx = "*"
 pytest = "*"
 jinja2 = "*"
+sqlmodel = "*"
 
 [dev-packages]
 

@@ -1,13 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlmodel import Session
+from core.database import get_session
+from data.task import get_all
 
 from models.task import Task
+
 import data.task as service
 
 router = APIRouter(prefix = "/tasks")
 
-@router.get("/")
-def get_all() -> list[Task]:
-    return service.get_all()
+@router.get("/", response_model=list[Task])
+def get_all_tasks(session: Session = Depends(get_session)) -> list[Task]:
+    return get_all(session)
 
 @router.get("/{id}")
 def get_one(id) -> Task | None:

@@ -1,8 +1,7 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from sqlmodel import Field, SQLModel
 
 
-class Book(BaseModel):
-    id: int
+class Book(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
     title: str
     description: str | None = None
