@@ -6,6 +6,10 @@ This is a FastAPI app that I use to learn FastAPI, and Python in general.
 ## Features
 
 - Python
+- FastAPI
+- JavaScript
+- PostgreSQL
+- Docker
 
 ## Dev
 
@@ -20,6 +24,14 @@ Set environment variables
 ```sh
 cp ./backend/.env.dev.sample ./backend/.env
 ```
+
+- Build the new image and spin up the containers:
+
+```sh
+docker-compose up -d --build
+```
+
+Got ot `http://127.0.0.1:8000`
 
 ### Database
 
@@ -45,39 +57,31 @@ crud_in_the_cloud_db=# \c crud_in_the_cloud_db
 crud_in_the_cloud_db=# \dt
 ```
 
-* Create your virtual environment
-```sh
-python -m venv .venv
-```
+#### Access pgAdmin
 
-* Activate your virtual environment
-```sh
-source .venv/bin/activate
-```
+Go to `http://localhost:8080/login`
 
-* Install the project dependencies
-```sh
-pip install -r requirements.txt
-```
+Use the following logins:
 
-* To run the server
-```sh
-uvicorn main:app --reload
-```
+    - user/email: admin@users.com
 
-Or
+    - password: adminpassword
 
-```sh
-fastapi dev main.py
-```
+When creating the server:
+    - General tab:
 
-Got ot `http://127.0.0.1:8000`
+        - name: server
 
-- Build the new image and spin up the containers:
+    - Connection tab:
 
-```sh
-docker-compose up -d --build
-```
+        - Host name/address: db
+
+        - Username: pguser
+
+        - Password: pguserpassword
+
+        ⚠️ The other fields do not change
+
 
 ### Install new packages
 

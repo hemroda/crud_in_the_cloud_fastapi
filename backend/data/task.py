@@ -10,11 +10,11 @@ def get_all(session: Session = Depends(get_session)) -> list[Task]:
     """Retrieve all tasks from the database."""
     statement = select(Task)
     tasks = session.exec(statement).all()
-    return [Task(name=task.name, description=task.description, id=task.id) for task in tasks]
+    return [Task(name=task.name, description=task.description, id=task.id, user_id=task.user_id) for task in tasks]
 
-def get_one(id: int, session: Session) -> Task | None:
+def get_one(task_id: int, session: Session) -> Task | None:
     """Retrieve a task by its ID from the database."""
-    statement = select(Task).where(Task.id == id)
+    statement = select(Task).where(Task.id == task_id)
     task = session.exec(statement).one_or_none()
     return task
 
@@ -31,8 +31,23 @@ def create(task_data: Task, session: Session) -> Task:
     session.refresh(task)
     return task
 
-def modify(task: Task) -> Task:
-    """Partially modify a task"""
+def modify(task_id: int, task_data: Task, session: Session) -> Task | None:
+    """Partially modify a task."""
+    task = session.get(Task, task_id)
+    if not task:
+        return None
+
+    if task_data.name is not None:
+        task.name = task_data.name
+    if task_data.description is not None:
+        task.description = task_data.description
+    if task_data.user_id is not None:
+        task.user_id = task_data.user_id
+
+    session.add(task)
+    session.commit()
+    session.refresh(task)
+
     return task
 
 def replace(task: Task) -> Task:
