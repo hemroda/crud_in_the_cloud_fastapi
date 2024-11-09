@@ -8,9 +8,6 @@ def get_all() -> list[User]:
 def get_one(id: int) -> User | None:
     return data.get_one(id)
 
-def get_one_by_title(title: str) -> User | None:
-    return data.get_one_by_title(title)
-
 def create(user: User) -> User:
     return data.create(user)
 

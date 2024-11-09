@@ -12,6 +12,14 @@ def get_all(session: Session = Depends(get_session)) -> list[User]:
 
     return service.get_all(session)
 
+@router.get("/{user_id}", response_model=User)
+def get_one(user_id: int, session: Session = Depends(get_session)) -> User:
+    """Endpoint to get a user by its ID."""
+    user = service.get_one(user_id, session)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return user
+
 @router.post("/", response_model=User)
 def create(user: User, session: Session = Depends(get_session)) -> User:
 
