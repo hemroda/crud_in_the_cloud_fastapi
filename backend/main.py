@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
+from core.config import settings
 from core.database import init_db
 from web import book, task, user, website
 
@@ -14,7 +15,7 @@ async def lifespan(app: FastAPI):
     yield
 
 # Initialize the FastAPI app
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, title=settings.PROJECT_TITLE, version=settings.PROJECT_VERSION)
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
