@@ -28,5 +28,7 @@ def replace(book: Book) -> Book:
     return service.replace(book)
 
 @router.delete("/{id}")
-def delete(id: int):
-    return service.delete(id)
+def delete(id: int, session: Session = Depends(get_session)) -> dict:
+    service.delete(id, session)
+
+    return {"detail": "Book deleted succesfully."}

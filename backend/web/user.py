@@ -33,3 +33,14 @@ def modify(user_id: int, user: User, session: Session = Depends(get_session)) ->
         raise HTTPException(status_code=404, detail="User not found.")
 
     return updated_user
+
+@router.delete("/{user_id}")
+def delete(user_id: int, user: User, session: Session = Depends(get_session)) -> dict:
+    user = session.get(User, user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+    
+    service.delete(user_id, session)
+
+    return {"detail": "User deleted successfully"}

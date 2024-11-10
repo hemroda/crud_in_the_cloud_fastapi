@@ -20,5 +20,5 @@ def replace(id, book: Book) -> Book:
 def modify(id, book: Book) -> Book:
     return data.modify(id, book)
 
-def delete(id, book: Book) -> bool:
+def delete(id: int) -> bool:
     return data.delete(id)

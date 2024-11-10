@@ -39,3 +39,9 @@ def modify(user_id: int, user_data: User, session: Session) -> User | None:
     session.refresh(user)
 
     return user
+
+def delete(user_id: int, session: Session) -> bool:
+    user = session.get(User, user_id)
+    session.delete(user)
+    session.commit()
+    return None

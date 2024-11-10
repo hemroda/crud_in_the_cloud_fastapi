@@ -37,12 +37,11 @@ def replace(task: Task) -> Task:
 
 @router.delete("/{task_id}")
 def delete(task_id: int, session: Session = Depends(get_session)) -> dict:
-    """Delete a task by its ID."""
     task = session.get(Task, task_id)
 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found.")
+    
+    service.delete(task_id, session)
 
-    session.delete(task)
-    session.commit()
     return {"detail": "Task deleted successfully"}

@@ -1,3 +1,4 @@
+from sqlalchemy import text
 from fastapi import Depends
 from sqlmodel import Session, select
 
@@ -9,7 +10,7 @@ from core.database import get_session
 def get_all(session: Session = Depends(get_session)) -> list[Book]:
     statement = select(Book)
     books = session.exec(statement).all()
-    return [Book(title=book.title, description=book.description,) for book in books]
+    return [Book(title=book.title, description=book.description,id=book.id) for book in books]
 
 def get_one(id: int) -> Book | None:
     for _book in _books:
@@ -39,6 +40,8 @@ def replace(book: Book) -> Book:
     """Completely replace a book"""
     return book
 
-def delete(name: str) -> bool:
-    """Delete a book return None if it existed"""
+def delete(book_id: int, session: Session) -> bool:
+    statement = text(f"DELETE FROM books where id = {book_id};")
+    session.exec(statement)
+    session.commit()
     return None

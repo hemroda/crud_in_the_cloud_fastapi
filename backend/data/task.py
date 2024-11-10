@@ -54,6 +54,8 @@ def replace(task: Task) -> Task:
     """Completely replace a task"""
     return task
 
-def delete(name: str) -> bool:
-    """Delete a task; return None if it existed"""
+def delete(task_id: int, session: Session) -> bool:
+    task = session.get(Task, task_id)
+    session.delete(task)
+    session.commit()
     return None
