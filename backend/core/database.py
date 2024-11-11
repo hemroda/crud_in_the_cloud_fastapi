@@ -1,13 +1,14 @@
 # core/database.py
 import os
 from sqlmodel import create_engine, SQLModel, Session
+from core.config import settings
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
-engine = create_engine(DATABASE_URL, echo=True)
+
+engine = create_engine(settings.DATABASE_URL, echo=True)
 
 def init_db():
     SQLModel.metadata.create_all(engine)
 
 def get_session():
     with Session(engine) as session:
-        yield session  # Correctly yield a session instance
+        yield session

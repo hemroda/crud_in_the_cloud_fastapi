@@ -22,7 +22,7 @@ git clone git@github.com:hemroda/crud_in_the_cloud_fastapi.git
 Set environment variables
 
 ```sh
-cp ./backend/.env.dev.sample ./backend/.env
+cp ./backend/.env.sample ./backend/.env
 ```
 
 - Build the new image and spin up the containers:
