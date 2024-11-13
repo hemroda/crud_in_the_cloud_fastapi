@@ -5,11 +5,8 @@ import data.book as data
 def get_all() -> list[Book]:
     return data.get_all()
 
-def get_one(id: int) -> Book | None:
+def get_one_by_id(id: int) -> Book | None:
     return data.get_one(id)
-
-def get_one_by_title(title: str) -> Book | None:
-    return data.get_one_by_title(title)
 
 def create(book: Book) -> Book:
     return data.create(book)
