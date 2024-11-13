@@ -113,3 +113,9 @@ Got to `http://127.0.0.1:8000/doc`
 ```sh
 fastapi run main.py
 ```
+
+* Copy `terraform.tfvars.sample` to `terraform.tfvars` and update the values.
+
+```sh
+cp terraform.tfvars.sample terraform.tfvars
+```
