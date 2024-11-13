@@ -1,12 +1,21 @@
 # pull official base image
 FROM python:3.12.7-alpine3.19
 
-# set work directory
-WORKDIR /usr/src/backend
+# create the cruder user
+RUN addgroup -S crudergroup && adduser -S cruder -G crudergroup
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV HOME=/usr/src
+ENV APP_HOME=/usr/src/backend
+
+# set work directory
+WORKDIR $APP_HOME
+
+# create the appropriate directories
+RUN mkdir $APP_HOME/staticfiles
+RUN mkdir $APP_HOME/mediafiles
 
 # install psycopg2 dependencies
 RUN apk update \
@@ -14,23 +23,25 @@ RUN apk update \
 
 # install dependencies
 RUN pip install --upgrade pip
-COPY Pipfile Pipfile.lock /usr/src/backend/
+COPY Pipfile Pipfile.lock $APP_HOME
 
 RUN pip install pipenv && \
     pipenv install --deploy --system
 
 # copy entrypoint.sh
 COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g' /usr/src/backend/entrypoint.sh
-RUN ["chmod", "+x", "/usr/src/backend/entrypoint.sh"]
+RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
+RUN chmod +x  $APP_HOME/entrypoint.sh
 
 # copy project
-COPY . .
+COPY . $APP_HOME
+
+# chown all the files to the app user
+RUN chown -R cruder:crudergroup $APP_HOME
+
+# change to the cruder user
+USER cruder
 
 EXPOSE 8000
 
-# run entrypoint.sh
-# ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]
-
-# CMD ["fastapi", "run", "main.py"]
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

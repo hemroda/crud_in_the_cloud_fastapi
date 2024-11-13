@@ -1,4 +1,3 @@
-
 # CRUD-in-the-Cloud [FastAPI]
 
 This is a FastAPI app that I use to learn FastAPI, and Python in general.
@@ -109,13 +108,27 @@ Got to `http://127.0.0.1:8000/doc`
 
 ## Production
 
-* To run the server
-```sh
-fastapi run main.py
-```
+### Before creating the servers
 
 * Copy `terraform.tfvars.sample` to `terraform.tfvars` and update the values.
 
 ```sh
 cp terraform.tfvars.sample terraform.tfvars
+```
+
+### Deploying in Prod for updates
+
+* SSH to the server.
+* cd into `crud_in_the_cloud_fastapi` folder
+* Pull the changes, run `git pull origin main`
+* Run the following commands:
+
+```sh
+docker-compose -f docker-compose.prod.yml up -d --build
+```
+
+### Renew certificate
+
+```sh
+docker-compose -f docker-compose.prod.yml run --rm certbot sh -c "certbot renew"
 ```

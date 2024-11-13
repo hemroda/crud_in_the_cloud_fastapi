@@ -1,0 +1,13 @@
+location /static/ {
+  alias /usr/src/backend/staticfiles/;
+  add_header Access-Control-Allow-Origin *;
+}
+
+location /media/ {
+  alias /usr/src/backend/mediafiles/;
+  add_header Access-Control-Allow-Origin *;
+}
+
+location /favicon.ico {
+    alias /usr/src/backend/staticfiles/favicon.ico;
+}
