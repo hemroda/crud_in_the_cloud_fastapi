@@ -4,8 +4,14 @@ import os
 class Settings:
     PROJECT_TITLE: str = "Crud@Cloud"
     PROJECT_VERSION: str = "0.1.0"
-    DATABASE_URL = os.environ.get("DATABASE_URL")
     ALLOW_ORIGINS_LIST = os.environ.get("ALLOW_ORIGINS_LIST")
+
+    POSTGRES_USER = os.environ.get("POSTGRES_USER")
+    POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+    POSTGRES_DB = os.environ.get("POSTGRES_DB")
+    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "localhost")
+    POSTGRES_PORT = os.environ.get("POSTGRES_PORT", 5432)
+    DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
 
 settings = Settings()
