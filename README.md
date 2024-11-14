@@ -56,6 +56,16 @@ crud_in_the_cloud_db=# \c crud_in_the_cloud_db
 crud_in_the_cloud_db=# \dt
 ```
 
+#### Migrations - Alembic
+
+```sh
+alembic revision --autogenerate -m "the message you want"
+```
+
+```sh
+alembic upgrade head
+```
+
 #### Access pgAdmin
 
 Go to `http://localhost:8080/login`

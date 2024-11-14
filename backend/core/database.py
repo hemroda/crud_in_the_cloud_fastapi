@@ -1,14 +1,21 @@
-# core/database.py
-import os
-from sqlmodel import create_engine, SQLModel, Session
+from typing_extensions import Generator
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 from core.config import settings
+from models.base import Base
 
 
-engine = create_engine(settings.DATABASE_URL, echo=True)
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
-def init_db():
-    SQLModel.metadata.create_all(engine)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-def get_session():
-    with Session(engine) as session:
-        yield session
+SESSIONLOCAL = sessionmaker(autoflush=False, autocommit=False, bind=engine)
+
+
+def get_db() -> Generator:
+    try:
+        db = SESSIONLOCAL()
+        yield db
+    finally:
+        db.close()

@@ -1,45 +1,45 @@
-from fastapi import Depends
-from sqlmodel import Session, select
+# from fastapi import Depends
+# from sqlalchemy import select
 
-from models.user import User
-
-from core.database import get_session
+# from models.user import User
 
 
-def get_all(session: Session = Depends(get_session)) -> list[User]:
-    statement = select(User)
-    users = session.exec(statement).all()
-    return [User(email=user.email, id=user.id) for user in users]
 
-def get_one(user_id: int, session: Session) -> User | None:
-    statement = select(User).where(User.id == user_id)
-    user = session.exec(statement).one_or_none()
-    return user
 
-def create(user_data: User, session: Session) -> User:
-    user = User(email=user_data.email)
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return user
+# def get_all(session: Session = Depends(get_session)) -> list[User]:
+#     statement = select(User)
+#     users = session.exec(statement).all()
+#     return [User(email=user.email, id=user.id) for user in users]
 
-def modify(user_id: int, user_data: User, session: Session) -> User | None:
-    user = session.get(User, user_id)
+# def get_one(user_id: int, session: Session) -> User | None:
+#     statement = select(User).where(User.id == user_id)
+#     user = session.exec(statement).one_or_none()
+#     return user
 
-    if user is None:
-        return None
+# def create(user_data: User, session: Session) -> User:
+#     user = User(email=user_data.email)
+#     session.add(user)
+#     session.commit()
+#     session.refresh(user)
+#     return user
 
-    if user_data.email != user.email:
-        user.email = user_data.email
+# def modify(user_id: int, user_data: User, session: Session) -> User | None:
+#     user = session.get(User, user_id)
 
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+#     if user is None:
+#         return None
 
-    return user
+#     if user_data.email != user.email:
+#         user.email = user_data.email
 
-def delete(user_id: int, session: Session) -> bool:
-    user = session.get(User, user_id)
-    session.delete(user)
-    session.commit()
-    return None
+#     session.add(user)
+#     session.commit()
+#     session.refresh(user)
+
+#     return user
+
+# def delete(user_id: int, session: Session) -> bool:
+#     user = session.get(User, user_id)
+#     session.delete(user)
+#     session.commit()
+#     return None
