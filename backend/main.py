@@ -7,7 +7,7 @@ from sqlalchemy.sql import text
 from contextlib import asynccontextmanager
 
 from core.config import settings
-from web import website # book, task, user,
+from web import article, user, website # book, task,
 
 
 @asynccontextmanager
@@ -30,7 +30,8 @@ app.add_middleware(
 # Include routers for different modules
 # app.include_router(book.router)
 # app.include_router(task.router)
-# app.include_router(user.router)
+app.include_router(article.router)
+app.include_router(user.router)
 app.include_router(website.router)
 
 # System

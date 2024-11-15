@@ -5,8 +5,6 @@
 # from models.book import Book, BookCreate, BookUpdate
 
 
-
-
 # def get_all(session: Session = Depends(get_session), skip: int = 0, limit: int = 100) -> list[Book]:
 #     statement = select(Book).offset(skip).limit(limit)
 #     books = session.exec(statement).all()

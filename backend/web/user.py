@@ -1,9 +1,20 @@
-# from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
-# from models.user import User
-# import data.user as service
+from schemas.user import UserCreate, UserShow
+from core.database import get_db
+import data.user as service
 
-# router = APIRouter(prefix = "/users")
+
+router = APIRouter(
+    prefix = "/users",
+    tags=["Books"],
+    responses={
+        status.HTTP_201_CREATED: {"description": "User has been created."},
+        status.HTTP_404_NOT_FOUND: {"description": "User not found"},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {"description": "Internal server error"},
+    }
+)
 
 # @router.get("/", response_model=list[User])
 # def get_all(session: Session = Depends(get_session)) -> list[User]:
@@ -18,10 +29,10 @@
 #         raise HTTPException(status_code=404, detail="User not found.")
 #     return user
 
-# @router.post("/", response_model=User)
-# def create(user: User, session: Session = Depends(get_session)) -> User:
-
-#     return service.create(user, session)
+@router.post("/", response_model=UserShow, status_code=status.HTTP_201_CREATED)
+def create(user: UserCreate, db: Session = Depends(get_db)) -> UserCreate:
+    user = service.create_new_user(user_data=user, db=db)
+    return user
 
 # @router.patch("/{user_id}", response_model=User)
 # def modify(user_id: int, user: User, session: Session = Depends(get_session)) -> User:
