@@ -98,6 +98,12 @@ When creating the server:
  docker-compose exec backend pipenv install name_of_the_package
 ```
 
+⚠️⚠️ After adding a new package, you will need to rebuild the project ⚠️⚠️
+
+```sh
+ docker-compose up -d --build
+```
+
 ## Specs
 
 * Run all the specs in Docker

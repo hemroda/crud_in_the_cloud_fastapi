@@ -1,5 +1,3 @@
-# backend/schemas/article.py
-
 from typing import Optional, Text
 from pydantic import BaseModel, constr, validator, root_validator
 from datetime import datetime

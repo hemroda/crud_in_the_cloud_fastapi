@@ -13,5 +13,9 @@ class Settings:
     POSTGRES_PORT = os.environ.get("POSTGRES_PORT", 5432)
     DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    ALGORITHM = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 
 settings = Settings()
