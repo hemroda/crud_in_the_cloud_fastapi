@@ -56,6 +56,16 @@ crud_in_the_cloud_db=# \c crud_in_the_cloud_db
 crud_in_the_cloud_db=# \dt
 ```
 
+#### Migrations - Alembic
+
+```sh
+alembic revision --autogenerate -m "the message you want"
+```
+
+```sh
+alembic upgrade head
+```
+
 #### Access pgAdmin
 
 Go to `http://localhost:8080/login`
@@ -86,6 +96,12 @@ When creating the server:
 
 ```sh
  docker-compose exec backend pipenv install name_of_the_package
+```
+
+⚠️⚠️ After adding a new package, you will need to rebuild the project ⚠️⚠️
+
+```sh
+ docker-compose up -d --build
 ```
 
 ## Specs

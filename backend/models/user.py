@@ -1,13 +1,14 @@
-from sqlmodel import SQLModel, Field, Relationship
-from typing import TYPE_CHECKING, Optional, List
+from datetime import datetime
+from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy.orm import relationship
 
-if TYPE_CHECKING:
-    from models.task import Task
+from models.base_class import Base
 
 
-class User(SQLModel, table=True):
-    __tablename__ = "users"
-
-    id: int = Field(default=None, primary_key=True)
-    email: str
-    tasks: list["Task"] = Relationship(back_populates="user")
+class User(Base):
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, nullable=False, unique=True, index=True)
+    password = Column(String, nullable=False)
+    admin = Column(Boolean, default=False)
+    articles = relationship("Article", back_populates="author")
+    # tasks: list["Task"] = Relationship(back_populates="user")

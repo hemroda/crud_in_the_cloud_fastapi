@@ -13,7 +13,10 @@ requests = "*"
 httpx = "*"
 pytest = "*"
 jinja2 = "*"
-sqlmodel = "*"
+alembic = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = "*"
+python-multipart = "*"
 
 [dev-packages]
 

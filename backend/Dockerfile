@@ -7,6 +7,7 @@ RUN addgroup -S crudergroup && adduser -S cruder -G crudergroup
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PIPENV_VENV_IN_PROJECT 1
 ENV HOME=/usr/src
 ENV APP_HOME=/usr/src/backend
 

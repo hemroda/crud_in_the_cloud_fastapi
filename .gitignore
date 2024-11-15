@@ -1,5 +1,7 @@
 .DS_Store
 
+test_db.db
+
 ### Terraform ###
 #################
 # Local .terraform directories
