@@ -6,10 +6,11 @@ from schemas.article import ArticleCreate, ArticleShow, ArticleUpdate
 import data.article as data
 
 class ArticleService:
+
     @staticmethod
-    def create_article(article: ArticleCreate, db: Session) -> ArticleShow:
+    def create_article(article: ArticleCreate, db: Session, author_id) -> ArticleShow:
         try:
-            return data.db_create_article(article, db)
+            return data.db_create_article(article, db, author_id)
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

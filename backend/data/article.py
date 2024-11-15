@@ -13,13 +13,13 @@ def db_get_article_by_id(article_id: int, db: Session) -> Article:
     article = db.query(Article).filter(Article.id == article_id).first()
     return article
 
-def db_create_article(article_data: ArticleCreate,db: Session) -> Article:
+def db_create_article(article_data: ArticleCreate,db: Session, author_id) -> Article:
     """Create a new article"""
     db_article = Article(
         title=article_data.title,
         slug=article_data.slug,
         content=article_data.content,
-        author_id=article_data.author_id,
+        author_id=author_id,
         published=False
     )
     try:

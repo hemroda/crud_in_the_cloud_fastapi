@@ -1,5 +1,5 @@
 from typing import Optional, Text
-from pydantic import BaseModel, constr, validator, root_validator
+from pydantic import BaseModel, constr, root_validator
 from datetime import datetime
 
 
@@ -7,7 +7,6 @@ class ArticleCreate(BaseModel):
     title: constr(min_length=3, max_length=100)
     slug: constr(min_length=3, max_length=100)
     content: Text
-    author_id: int
 
     @root_validator(pre=True)
     def generate_slug(cls, values):
@@ -22,6 +21,7 @@ class ArticleShow(BaseModel):
     content: Text
     created_at: datetime
     published: bool
+    author_id: int
 
     class Config():
         from_attributes = True

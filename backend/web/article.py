@@ -5,6 +5,8 @@ from typing import List
 from schemas.article import ArticleCreate, ArticleUpdate, ArticleShow
 from core.database import get_db
 from service.article import ArticleService
+from models.user import User
+from web.login import get_current_user
 
 
 router = APIRouter(
@@ -63,6 +65,7 @@ def get_article_by_id(article_id: int, db: Session = Depends(get_db)) -> Article
             detail=f"Error retrieving article: {str(e)}"
         )
 
+
 @router.post(
     "/",
     response_model=ArticleShow,
@@ -73,11 +76,12 @@ def get_article_by_id(article_id: int, db: Session = Depends(get_db)) -> Article
 def create_article(
     article: ArticleCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
     response: Response = None
 ) -> ArticleShow:
     """Create an article"""
     try:
-        created_article = ArticleService.create_article(article, db)
+        created_article = ArticleService.create_article(article, db, author_id=current_user.id)
         response.headers["Location"] = f"/articles/{created_article.id}"
         return created_article
     except Exception as e:
@@ -85,6 +89,7 @@ def create_article(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error creating article: {str(e)}"
         )
+
 
 @router.put(
     "/{article_id}",
@@ -108,6 +113,7 @@ def update_article(
         partial=False
     )
 
+
 @router.patch(
     "/{article_id}",
     response_model=ArticleShow,
@@ -130,13 +136,14 @@ def patch_article(
         partial=True
     )
 
+
 @router.delete(
     "/{article_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete an article",
     response_description="Article succesfully deleted"
 )
-def delete_article(article_id: int, db: Session = Depends(get_db)):
+def delete_article(article_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Delete a article by its ID."""
     try:
         ArticleService.delete_article(article_id, db)
