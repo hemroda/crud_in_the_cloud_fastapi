@@ -1,4 +1,17 @@
-# pull official base image
+# Build stage for Tailwind CSS
+FROM node:20-alpine AS css-builder
+WORKDIR /app
+# Copy package files
+COPY package.json package-lock.json ./
+# Install dependencies (ignore optional deps)
+RUN npm install --no-optional
+# Copy source files needed for build
+COPY static ./static
+COPY tailwind.config.js ./
+# Build CSS
+RUN npm run build:css
+
+# Main Python application stage
 FROM python:3.12.7-alpine3.19
 
 # create the cruder user
@@ -24,18 +37,21 @@ RUN apk update \
 
 # install dependencies
 RUN pip install --upgrade pip
-COPY Pipfile Pipfile.lock $APP_HOME
+COPY Pipfile Pipfile.lock ./
 
 RUN pip install pipenv && \
     pipenv install --deploy --system
 
 # copy entrypoint.sh
-COPY ./entrypoint.sh .
+COPY entrypoint.sh .
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
 RUN chmod +x  $APP_HOME/entrypoint.sh
 
 # copy project
-COPY . $APP_HOME
+COPY . .
+
+# Copy the compiled CSS from the build stage
+COPY --from=css-builder /app/static/css/main.css ./static/css/
 
 # chown all the files to the app user
 RUN chown -R cruder:crudergroup $APP_HOME
@@ -44,11 +60,6 @@ RUN chown -R cruder:crudergroup $APP_HOME
 USER cruder
 
 EXPOSE 8000
-
-# copy entrypoint.sh
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g' /usr/src/backend/entrypoint.sh
-RUN ["chmod", "+x", "/usr/src/backend/entrypoint.sh"]
 
 # run entrypoint.sh
 ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]

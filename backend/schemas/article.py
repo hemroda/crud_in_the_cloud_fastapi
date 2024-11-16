@@ -19,6 +19,7 @@ class ArticleShow(BaseModel):
     id: int
     title: str
     content: Text
+    slug: str
     created_at: datetime
     published: bool
     author_id: int

@@ -1,0 +1,18 @@
+{
+  "name": "crud-in-the-cloud-fastapi",
+  "version": "0.1.0",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/css/src/main.css -o ./static/css/main.css --minify",
+    "watch:css": "tailwindcss -i ./static/css/src/main.css -o ./static/css/main.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35"
+  },
+  "overrides": {
+    "chokidar": {
+      "fsevents": "^2.3.3"
+    }
+  }
+}
