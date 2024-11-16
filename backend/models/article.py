@@ -6,6 +6,8 @@ from models.base_class import Base
 
 
 class Article(Base):
+    __tablename__ = "articles"
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     slug = Column(String, nullable=False)
@@ -13,5 +15,5 @@ class Article(Base):
     published = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    author_id = Column(Integer, ForeignKey("user.id"))
+    author_id = Column(Integer, ForeignKey("users.id"))
     author = relationship("User", back_populates="articles")
