@@ -45,4 +45,12 @@ USER cruder
 
 EXPOSE 8000
 
+# copy entrypoint.sh
+COPY ./entrypoint.sh .
+RUN sed -i 's/\r$//g' /usr/src/backend/entrypoint.sh
+RUN ["chmod", "+x", "/usr/src/backend/entrypoint.sh"]
+
+# run entrypoint.sh
+ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
