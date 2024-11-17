@@ -18,23 +18,23 @@ WORKDIR $APP_HOME
 RUN mkdir $APP_HOME/staticfiles
 RUN mkdir $APP_HOME/mediafiles
 
-# install psycopg2 dependencies
+# install psycopg2 dependencies and Node.js
 RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
+    && apk add --no-cache postgresql-dev gcc python3-dev musl-dev npm
 
-# install dependencies
+# install Python dependencies
 RUN pip install --upgrade pip
 COPY Pipfile Pipfile.lock $APP_HOME
-
 RUN pip install pipenv && \
     pipenv install --deploy --system
 
-# copy entrypoint.sh
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
-RUN chmod +x  $APP_HOME/entrypoint.sh
+# copy package.json and package-lock.json
+COPY package.json package-lock.json $APP_HOME/
 
-# copy project
+# install Node.js dependencies
+RUN npm install
+
+# copy the rest of the project
 COPY . $APP_HOME
 
 # chown all the files to the app user
@@ -45,12 +45,11 @@ USER cruder
 
 EXPOSE 8000
 
-# copy entrypoint.sh
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g' /usr/src/backend/entrypoint.sh
-RUN ["chmod", "+x", "/usr/src/backend/entrypoint.sh"]
-
 # run entrypoint.sh
+COPY ./entrypoint.sh .
+RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.sh
+RUN chmod +x $APP_HOME/entrypoint.sh
+
 ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "0.1.0",
+  "description": "manage front packages",
+  "scripts": {
+    "dev:tailwind": "tailwindcss -i ./static/css/src/style.css -o ./static/css/main.css --watch",
+    "build:tailwind": "tailwindcss -i ./static/css/src/style.css -o ./static/css/main.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.0.0",
+    "postcss": "^8.0.0",
+    "autoprefixer": "^10.0.0"
+  },
+  "author": "hemroda",
+  "license": "ISC"
+}
