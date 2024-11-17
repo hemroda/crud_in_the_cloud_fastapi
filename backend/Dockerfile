@@ -40,6 +40,13 @@ COPY . $APP_HOME
 # chown all the files to the app user
 RUN chown -R cruder:crudergroup $APP_HOME
 
+# Give auth to pytailwindcss package to cruder user
+RUN chown -R cruder:crudergroup /usr/local/lib/python3.12/site-packages/pytailwindcss/*
+# Preinstall tailwindcss binary for pytailwindcss package
+RUN tailwindcss_install
+
+RUN chown -R cruder:crudergroup /usr/local/lib/python3.12/site-packages/pytailwindcss/bin/latest/tailwindcss
+
 # change to the cruder user
 USER cruder
 

@@ -17,6 +17,7 @@ alembic = "*"
 passlib = {extras = ["bcrypt"], version = "*"}
 python-jose = "*"
 python-multipart = "*"
+pytailwindcss = "*"
 
 [dev-packages]
 
