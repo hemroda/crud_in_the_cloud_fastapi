@@ -19,6 +19,7 @@ router = APIRouter(
     }
 )
 
+
 @router.get(
     "/",
     response_model=list[TaskShow],
@@ -39,6 +40,7 @@ def get_tasks(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error retrieving tasks: {str(e)}"
         )
+
 
 @router.get(
     "/{task_id}",

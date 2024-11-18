@@ -1,0 +1,32 @@
+{% for task in tasks %}
+<li>
+  <input
+    name="text"
+    value="{{ task.name }}"
+    {% if task.done %}style="text-decoration: line-through" disabled="true"{% endif %}
+    hx-put="/tasks/{{task.id}}"
+    hx-target="#tasks"
+    hx-swap="innerHTML"
+    hx-trigger="keyup changed delay:250ms"
+    >
+  <input
+    type="checkbox"
+    {% if task.done %}checked="true"{% endif %}
+    hx-post="/tasks/{{task.id}}/toggle"
+    hx-target="#tasks"
+    hx-swap="innerHTML"
+    title="Mark task as {% if task.done %}not {% endif %}done"
+    >
+  <input
+    type="button"
+    value="❌"
+    hx-post="/tasks/{{task.id}}/delete"
+    hx-target="#tasks"
+    hx-swap="innerHTML"
+    title="Delete task"
+    >
+</li>
+{% endfor %}
+{% if not tasks %}
+<li>No tasks.</li>
+{% endif %}

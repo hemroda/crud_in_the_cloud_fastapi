@@ -1,0 +1,45 @@
+{% extends "website_base.html" %}
+
+{% block title %}Crud@Cloud{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mt-8 md:mt-24 mb-60 px-4">
+  <h2 class="text-6xl font-light text-gray-900">Tasks</h2>
+  <div class="mt-8">
+    <form
+      class="flex flex-col gap-2"
+      hx-post="/tasks"
+      hx-target="#tasks"
+      hx-swap="innerHTML"
+      hx-on:htmx:after-request="this.reset()"
+      >
+    <div class="flex gap-2">
+      <input
+        type="text"
+        name="todo"
+        placeholder="I'd like to..."
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        required>
+      <button
+        class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+        Create
+      </button>
+    </div>
+    <!-- <textarea
+      name="description"
+      placeholder="Add a description (optional)"
+      class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      rows="2"
+    ></textarea> -->
+  </form>
+
+    <ul
+      id="tasks"
+      class="mt-6 space-y-2"
+      hx-get="/tasks/index/"
+      hx-swap="innerHTML"
+      hx-trigger="load">
+    </ul>
+  </div>
+</div>
+{% endblock content %}
