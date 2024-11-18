@@ -7,7 +7,9 @@ from sqlalchemy.sql import text
 from contextlib import asynccontextmanager
 
 from core.config import settings
-from web import article, login, task, user, website # book
+from routes import login
+from routes.api import article, task, user # book
+from routes.web import website
 
 
 @asynccontextmanager

@@ -6,12 +6,12 @@ from schemas.user import UserCreate, UserShow, UserUpdate
 from core.database import get_db
 from service.user import UserService
 from models.user import User
-from web.login import get_current_user
+from routes.login import get_current_user
 
 
 router = APIRouter(
-    prefix = "/users",
-    tags=["Users"],
+    prefix = "/api/users",
+    tags=["API - Users"],
     responses={
         status.HTTP_201_CREATED: {"description": "User has been created."},
         status.HTTP_404_NOT_FOUND: {"description": "User not found"},

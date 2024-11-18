@@ -6,12 +6,12 @@ from schemas.task import TaskCreate, TaskUpdate, TaskShow
 from core.database import get_db
 from service.task import TaskService
 from models.user import User
-from web.login import get_current_user
+from routes.login import get_current_user
 
 
 router = APIRouter(
-    prefix = "/tasks",
-    tags=["Tasks"],
+    prefix = "/api/tasks",
+    tags=["API - Tasks"],
     responses={
         status.HTTP_201_CREATED: {"description": "Task has been created."},
         status.HTTP_404_NOT_FOUND: {"description": "Task not found"},
