@@ -7,7 +7,7 @@ from sqlalchemy.sql import text
 from contextlib import asynccontextmanager
 
 from core.config import settings
-from web import article, login, user, website # book, task,
+from web import article, login, task, user, website # book
 
 
 @asynccontextmanager
@@ -32,7 +32,7 @@ app.include_router(article.router)
 # app.include_router(book.router)
 app.include_router(login.router)
 app.include_router(user.router)
-# app.include_router(task.router)
+app.include_router(task.router)
 app.include_router(website.router)
 
 # System

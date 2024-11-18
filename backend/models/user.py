@@ -13,7 +13,8 @@ class User(Base):
     password = Column(String, nullable=False)
     admin = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    updated_at = Column(DateTime, nullable=True)
 
     articles = relationship("Article", back_populates="author")
-    # tasks: list["Task"] = Relationship(back_populates="user")
+    created_tasks = relationship("Task", back_populates="creator",foreign_keys="Task.creator_id")
+    owned_tasks = relationship("Task", back_populates="owner",foreign_keys="Task.owner_id")

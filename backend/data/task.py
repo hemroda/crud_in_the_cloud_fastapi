@@ -1,61 +1,74 @@
-# from fastapi import Depends
-# from sqlalchemy import select
+from sqlalchemy.orm import Session
+from datetime import datetime
 
-# from models.task import Task
+from schemas.task import TaskCreate
+from models.task import Task
 
 
+def db_get_tasks(db: Session, skip: int = 0, limit: int = 10):
+    """Retrieve all tasks"""
+    tasks = db.query(Task).offset(skip).limit(limit).all()
+
+    return tasks
 
 
-# def get_all(session: Session = Depends(get_session)) -> list[Task]:
-#     """Retrieve all tasks from the database."""
-#     statement = select(Task)
-#     tasks = session.exec(statement).all()
-#     return [Task(name=task.name, description=task.description, id=task.id, user_id=task.user_id) for task in tasks]
+def db_get_task_by_id(task_id: int, db: Session) -> Task:
+    """Retrieve a single task by its ID."""
+    task = db.query(Task).filter(Task.id == task_id).first()
 
-# def get_one(task_id: int, session: Session) -> Task | None:
-#     """Retrieve a task by its ID from the database."""
-#     statement = select(Task).where(Task.id == task_id)
-#     task = session.exec(statement).one_or_none()
-#     return task
+    return task
 
-# def get_one_by_name(name: str) -> Task | None:
-#     for _task in _tasks:
-#         if _task.name == name:
-#             return _task
-#     return None
 
-# def create(task_data: Task, session: Session) -> Task:
-#     task = Task(name=task_data.name, description=task_data.description, user_id=task_data.user_id)
-#     session.add(task)
-#     session.commit()
-#     session.refresh(task)
-#     return task
+def db_create_task(task_data: TaskCreate,db: Session, creator_id) -> Task:
+    """Create a new task"""
+    db_task = Task(
+        name=task_data.name,
+        description=task_data.description,
+        creator_id=creator_id,
+        done=False
+    )
+    try:
+        db.add(db_task)
+        db.commit()
+        db.refresh(db_task)
 
-# def modify(task_id: int, task_data: Task, session: Session) -> Task | None:
-#     """Partially modify a task."""
-#     task = session.get(Task, task_id)
-#     if not task:
-#         return None
+        return db_task
 
-#     if task_data.name is not None:
-#         task.name = task_data.name
-#     if task_data.description is not None:
-#         task.description = task_data.description
-#     if task_data.user_id is not None:
-#         task.user_id = task_data.user_id
+    except Exception as e:
+        db.rollback()
+        raise Exception(f"Failed to create task: {str(e)}")
 
-#     session.add(task)
-#     session.commit()
-#     session.refresh(task)
 
-#     return task
+def db_update_task(task_id: int, task_data: dict, db: Session) -> Task:
+    """Update a task"""
+    db_task = db_get_task_by_id(task_id, db)
 
-# def replace(task: Task) -> Task:
-#     """Completely replace a task"""
-#     return task
+    if db_task:
+        for key, value in task_data.items():
+            if value is not None:  # Only update fields that are provided
+                setattr(db_task, key, value)
 
-# def delete(task_id: int, session: Session) -> bool:
-#     task = session.get(Task, task_id)
-#     session.delete(task)
-#     session.commit()
-#     return None
+        # Set updated_at whenever any update occurs
+        db_task.updated_at = datetime.now()
+
+        # If task is being marked as done, set done_at
+        if db_task.done is True:
+            db_task.done_at = datetime.now()
+
+        db.commit()
+        db.refresh(db_task)
+
+    return db_task
+
+
+def db_delete_task(task_id: int, db: Session) -> bool:
+    """Delete a task"""
+    task = db_get_task_by_id(task_id, db)
+
+    if task:
+        db.delete(task)
+        db.commit()
+
+        return True
+
+    return False

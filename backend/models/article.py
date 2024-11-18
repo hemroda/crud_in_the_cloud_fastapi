@@ -14,6 +14,7 @@ class Article(Base):
     content = Column(Text, nullable=False)
     published = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    updated_at = Column(DateTime, nullable=True)
+
     author_id = Column(Integer, ForeignKey("users.id"))
     author = relationship("User", back_populates="articles")

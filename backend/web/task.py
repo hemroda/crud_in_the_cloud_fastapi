@@ -1,45 +1,157 @@
-# from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, status
+from sqlalchemy.orm import Session
+from typing import List
 
-# from models.task import Task
-# import data.task as service
+from schemas.task import TaskCreate, TaskUpdate, TaskShow
+from core.database import get_db
+from service.task import TaskService
+from models.user import User
+from web.login import get_current_user
 
-# router = APIRouter(prefix = "/tasks")
 
-# @router.get("/", response_model=list[Task])
-# def get_all(session: Session = Depends(get_session)) -> list[Task]:
-#     return service.get_all(session)
+router = APIRouter(
+    prefix = "/tasks",
+    tags=["Tasks"],
+    responses={
+        status.HTTP_201_CREATED: {"description": "Task has been created."},
+        status.HTTP_404_NOT_FOUND: {"description": "Task not found"},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {"description": "Internal server error"},
+    }
+)
 
-# @router.get("/{task_id}", response_model=Task)
-# def get_one(task_id: int, session: Session = Depends(get_session)) -> Task:
-#     """Endpoint to get a task by its ID."""
-#     task = service.get_one(task_id, session)
-#     if task is None:
-#         raise HTTPException(status_code=404, detail="Task not found.")
-#     return task
+@router.get(
+    "/",
+    response_model=list[TaskShow],
+    status_code=status.HTTP_200_OK,
+    summary="Get all tasks",
+    response_description="List of all tasks"
+)
+def get_tasks(
+    skip: int = 0,
+    limit: int = 10,
+    db: Session = Depends(get_db)
+) -> List[TaskShow]:
+    """Retrieve all tasks."""
+    try:
+        return TaskService.get_tasks(db, skip, limit)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error retrieving tasks: {str(e)}"
+        )
 
-# @router.post("/", response_model=Task)
-# def create(task: Task, session: Session = Depends(get_session)) -> Task:
-#     return service.create(task, session)
+@router.get(
+    "/{task_id}",
+    response_model=TaskShow,
+    status_code=status.HTTP_200_OK,
+    summary="Get a specific task",
+    response_description="The requested task"
+)
+def get_task_by_id(task_id: int, db: Session = Depends(get_db)) -> TaskShow:
+    """Retrieve a specific task by its ID."""
+    try:
+        task = TaskService.get_task_by_id(task_id, db)
+        if task is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Task with ID {task_id} not found"
+            )
+        return task
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error retrieving task: {str(e)}"
+        )
 
-# @router.patch("/{task_id}", response_model=Task)
-# def modify(task_id: int, task_data: Task, session: Session = Depends(get_session)) -> Task:
-#     """Endpoint to partially update a task."""
-#     updated_task = service.modify(task_id, task_data, session)
-#     if updated_task is None:
-#         raise HTTPException(status_code=404, detail="Task not found.")
-#     return updated_task
 
-# @router.put("/")
-# def replace(task: Task) -> Task:
-#     return service.replace(task)
+@router.post(
+    "/",
+    response_model=TaskShow,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new task",
+    response_description="The created task"
+)
+def create_task(
+    task: TaskCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+    response: Response = None
+) -> TaskShow:
+    """Create an task"""
+    try:
+        created_task = TaskService.create_task(task, db, creator_id=current_user.id)
+        response.headers["Location"] = f"/tasks/{created_task.id}"
+        return created_task
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error creating task: {str(e)}"
+        )
 
-# @router.delete("/{task_id}")
-# def delete(task_id: int, session: Session = Depends(get_session)) -> dict:
-#     task = session.get(Task, task_id)
 
-#     if not task:
-#         raise HTTPException(status_code=404, detail="Task not found.")
+@router.put(
+    "/{task_id}",
+    response_model=TaskShow,
+    status_code=status.HTTP_200_OK,
+    summary="Update an task (full update)"
+)
+def update_task(
+    task_id: int,
+    task: TaskUpdate,
+    db: Session = Depends(get_db)
+) -> TaskShow:
+    """
+    Update an task (full update).
+    All fields must be provided.
+    """
+    return TaskService.update_task(
+        task_id=task_id,
+        task_data=task,
+        db=db,
+        partial=False
+    )
 
-#     service.delete(task_id, session)
 
-#     return {"detail": "Task deleted successfully"}
+@router.patch(
+    "/{task_id}",
+    response_model=TaskShow,
+    status_code=status.HTTP_200_OK,
+    summary="Update an task (partial update)"
+)
+def patch_task(
+    task_id: int,
+    task: TaskUpdate,
+    db: Session = Depends(get_db)
+) -> TaskShow:
+    """
+    Update an task (partial update).
+    Only provided fields will be updated.
+    """
+    return TaskService.update_task(
+        task_id=task_id,
+        task_data=task,
+        db=db,
+        partial=True
+    )
+
+
+@router.delete(
+    "/{task_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete an task",
+    response_description="Task succesfully deleted"
+)
+def delete_task(task_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Delete a task by its ID."""
+    try:
+        TaskService.delete_task(task_id, db)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error deleting task: {str(e)}"
+        )
