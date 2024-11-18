@@ -66,3 +66,62 @@ def get_current_user(
         raise credentials_exception
 
     return user
+
+
+# Login Routes
+import json
+from fastapi.templating import Jinja2Templates
+from fastapi import Request, responses, Form
+from pydantic import ValidationError
+
+from schemas.user import UserCreate
+from service.user import UserService
+
+
+templates = Jinja2Templates(directory="templates")
+
+
+@router.get("/register")
+def register(request: Request):
+    return templates.TemplateResponse(request=request, name="auth/register.html")
+
+
+@router.post("/register")
+def register(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    try:
+        user_data = UserCreate(email=email, password=password)
+        UserService.create_user(user=user_data, db=db)
+
+        return responses.RedirectResponse(
+            "/?alert=Successfully%20Registered",
+            status_code=status.HTTP_302_FOUND
+        )
+    except ValidationError as e:
+        # Parse Pydantic validation errors
+        errors = [
+            f"{error['loc'][0]}: {error['msg']}"
+            for error in e.errors()
+        ]
+        return templates.TemplateResponse(
+            "auth/register.html",
+            {
+                "request": request,
+                "errors": errors,
+                "email": email  # Preserve entered email
+            }
+        )
+    except Exception as e:
+        # Handle other unexpected errors
+        return templates.TemplateResponse(
+            "auth/register.html",
+            {
+                "request": request,
+                "errors": [str(e)],
+                "email": email
+            }
+        )
