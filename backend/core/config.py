@@ -17,5 +17,6 @@ class Settings:
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+    APP_ENVIRONMENT= os.environ.get("APP_ENVIRONMENT")
 
 settings = Settings()

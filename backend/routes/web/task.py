@@ -11,6 +11,7 @@ from service.task import TaskService
 from models.user import User
 from schemas.task import TaskCreate
 from routes.login import get_current_user
+from core.config import settings
 
 templates = Jinja2Templates(directory="templates")
 
@@ -20,7 +21,10 @@ router = APIRouter(prefix = "/tasks", tags=["Website - Tasks"],)
 @router.get("/", response_class=HTMLResponse)
 async def tasks(request: Request,):
    return templates.TemplateResponse(
-            request=request, name="website/tasks/index.html"
+            request=request, name="website/tasks/index.html",
+            context={
+                "app_environment": settings.APP_ENVIRONMENT
+            }
         )
 
 

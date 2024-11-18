@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
@@ -9,18 +9,21 @@ from contextlib import asynccontextmanager
 from core.config import settings
 from routes import login
 from routes.api import article as api_article, task as api_task, user as api_user
-from routes.web import task as web_task, website
+from routes.web import article as web_article, task as web_task, website
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     yield
 
+
 # Initialize the FastAPI app
 app = FastAPI(lifespan=lifespan, title=settings.PROJECT_TITLE, version=settings.PROJECT_VERSION)
 
+
 # Serve static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 # Configure CORS
 app.add_middleware(
@@ -29,13 +32,16 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
 )
 
+
 # Include routers for different modules
 app.include_router(login.router)
 app.include_router(api_article.router)
 app.include_router(api_task.router)
 app.include_router(api_user.router)
+app.include_router(web_article.router)
 app.include_router(web_task.router)
 app.include_router(website.router)
+
 
 # System
 @app.get("/health", tags=["System"],)

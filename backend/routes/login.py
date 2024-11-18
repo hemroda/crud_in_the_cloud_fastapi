@@ -48,7 +48,7 @@ def get_current_user(
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials, please login again"
+        detail="Could not validate credentials. Please login again."
     )
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
@@ -56,6 +56,7 @@ def get_current_user(
 
         if email is None:
             raise credentials_exception
+
     except JWTError:
         raise credentials_exception
 

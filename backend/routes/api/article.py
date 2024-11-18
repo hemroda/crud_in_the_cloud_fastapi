@@ -19,6 +19,7 @@ router = APIRouter(
     }
 )
 
+
 @router.get(
     "/",
     response_model=list[ArticleShow],
@@ -39,6 +40,7 @@ def get_articles(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error retrieving articles: {str(e)}"
         )
+
 
 @router.get(
     "/{article_id}",
@@ -91,29 +93,6 @@ def create_article(
         )
 
 
-@router.put(
-    "/{article_id}",
-    response_model=ArticleShow,
-    status_code=status.HTTP_200_OK,
-    summary="Update an article (full update)"
-)
-def update_article(
-    article_id: int,
-    article: ArticleUpdate,
-    db: Session = Depends(get_db)
-) -> ArticleShow:
-    """
-    Update an article (full update).
-    All fields must be provided.
-    """
-    return ArticleService.update_article(
-        article_id=article_id,
-        article_data=article,
-        db=db,
-        partial=False
-    )
-
-
 @router.patch(
     "/{article_id}",
     response_model=ArticleShow,
@@ -123,7 +102,8 @@ def update_article(
 def patch_article(
     article_id: int,
     article: ArticleUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ) -> ArticleShow:
     """
     Update an article (partial update).
@@ -133,6 +113,7 @@ def patch_article(
         article_id=article_id,
         article_data=article,
         db=db,
+        author_id=current_user.id,
         partial=True
     )
 
@@ -143,10 +124,14 @@ def patch_article(
     summary="Delete an article",
     response_description="Article succesfully deleted"
 )
-def delete_article(article_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def delete_article(
+    article_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     """Delete a article by its ID."""
     try:
-        ArticleService.delete_article(article_id, db)
+        ArticleService.delete_article(article_id, db, author_id=current_user.id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except HTTPException:
         raise
