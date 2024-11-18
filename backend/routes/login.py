@@ -125,3 +125,36 @@ def register(
                 "email": email
             }
         )
+
+
+@router.get("/login")
+def login(request: Request):
+    return templates.TemplateResponse(request=request, name="auth/login.html")
+
+
+@router.post("/login")
+def login(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    errors = []
+    user = authenticate_user(email, password, db)
+
+    if not user:
+        errors.append("Incorrect email or password")
+
+        return templates.TemplateResponse(
+            request=request, name="auth/login.html",
+            context={ "errors": errors }
+        )
+
+    access_token = create_access_token(data={"sub": user.email})
+    response = responses.RedirectResponse(
+        "/?alert=Successfully Logged in",
+        status_code=status.HTTP_302_FOUND
+    )
+    response.set_cookie(key="access_token", value=f"Bearer {access_token}")
+
+    return response

@@ -1,0 +1,24 @@
+{% extends "website_base.html" %}
+
+{% block title %}Login - Crud@Cloud{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mt-8 md:mt-24 mb-60 px-4">
+  <h2 class="text-6xl font-light text-gray-900">Login</h2>
+
+  <div class="mt-4">
+    {% if errors %}
+    <div class="error-messages">
+        {% for error in errors %}
+        <p class="text-red-500">{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <form action="" method="post" class="mt-4">
+      <input type="email" required name="email" value="{{email}}" class="block mt-4" placeholder="enter your email">
+      <input type="password" required name="password" value="{{password}}" class="block mt-2" placeholder="enter a secure password">
+      <button type="submit" class="block mt-4">Login</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}
