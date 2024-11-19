@@ -7,7 +7,9 @@ This is a FastAPI app that I use to learn FastAPI, and Python in general.
 - Python
 - FastAPI
 - JavaScript
+- Sqlalchemy
 - PostgreSQL
+- Pytest
 - Docker
 
 ## Dev
@@ -116,6 +118,18 @@ docker-compose exec backend pytest -v
 ```sh
 docker-compose exec backend pytest -v test/unit/service/*.py
 ```
+
+## Gotchas
+
+* Tailwind or styles not applied
+If the class you try to use is not listed in `static/css/main.css`, you need to rebuild tailwind
+
+```sh
+docker-compose exec backend npm run build:tailwind
+```
+
+You might need to clear your browsers cache if it still is not working ¯\_(ツ)_/¯
+
 
 ### Documentation
 
