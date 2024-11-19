@@ -1,7 +1,14 @@
 <!-- TODO: use HTMX to render this closable/toggable -->
 <!-- TODO: update styling of the notification alert -->
 {% if alert %}
-<div class="" role="alert">
-  {{ alert }}
+<div class="flex justify-between mx-2 items-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-green-400 focus:shadow-outline focus:outline-none" role="alert">
+  <div>
+    {{ alert }}
+  </div>
+  <div>
+    <button type="button" class="-m-3 p-3 focus-visible:outline-offset-[-4px]">
+      X
+    </button>
+  </div>
 </div>
 {% endif %}

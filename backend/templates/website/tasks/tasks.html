@@ -1,5 +1,5 @@
 {% for task in tasks %}
-<li>
+<li class="w-96 flex justify-between items-center">
   <input
     name="text"
     value="{{ task.name }}"
@@ -8,8 +8,10 @@
     hx-target="#tasks"
     hx-swap="innerHTML"
     hx-trigger="keyup changed delay:250ms"
+    class="w-fit"
     >
-  <input
+  <div class="actions">
+    <input
     type="checkbox"
     {% if task.done %}checked="true"{% endif %}
     hx-post="/tasks/{{task.id}}/toggle"
@@ -24,7 +26,9 @@
     hx-target="#tasks"
     hx-swap="innerHTML"
     title="Delete task"
+    class="cursor-pointer"
     >
+  </div>
 </li>
 {% endfor %}
 {% if not tasks %}

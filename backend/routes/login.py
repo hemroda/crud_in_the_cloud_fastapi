@@ -8,6 +8,7 @@ from core.database import get_db
 from core.hashing import Hasher
 from core.security import create_access_token
 from service.login import LoginService
+from schemas.token import Token
 
 router = APIRouter(tags=["Authentication"],)
 
@@ -22,7 +23,7 @@ def authenticate_user(email: str, password: str, db: Session):
     return user
 
 
-@router.post("/token")
+@router.post("/token", response_model=Token)
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)

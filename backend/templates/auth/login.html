@@ -9,14 +9,14 @@
   <form method="post" class="auth-form max-w-2xl mt-4 mx-auto">
     {% if errors %}
     <div class="error-messages">
-        {% for error in errors %}
-        <p class="form-field-error">{{ error }}</p>
-        {% endfor %}
+      {% for error in errors %}
+      <p class="form-field-error">{{ error }}</p>
+      {% endfor %}
     </div>
     {% endif %}
     <input type="email" required name="email" value="{{email}}" class="form-field mt-4" placeholder="enter your email">
     <input type="password" required name="password" value="{{password}}" class="form-field mt-2" placeholder="enter a secure password">
-    <button type="submit" class="submit-btn block mt-4 w-full">Login</button>
+    <button type="submit" class="submit-btn w-full mt-4">Login</button>
   </form>
 </div>
 {% endblock content %}
