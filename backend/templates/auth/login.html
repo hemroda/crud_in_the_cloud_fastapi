@@ -3,22 +3,20 @@
 {% block title %}Login - Crud@Cloud{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mt-8 md:mt-24 mb-60 px-4">
+<div class="flex flex-col justify-center items-center max-w-6xl mt-8 md:mt-24 mb-60 px-4">
   <h2 class="text-6xl font-light text-gray-900">Login</h2>
 
-  <div class="mt-4">
+  <form method="post" class="auth-form max-w-2xl mt-4 mx-auto">
     {% if errors %}
     <div class="error-messages">
         {% for error in errors %}
-        <p class="text-red-500">{{ error }}</p>
+        <p class="form-field-error">{{ error }}</p>
         {% endfor %}
     </div>
     {% endif %}
-    <form action="" method="post" class="mt-4">
-      <input type="email" required name="email" value="{{email}}" class="block mt-4" placeholder="enter your email">
-      <input type="password" required name="password" value="{{password}}" class="block mt-2" placeholder="enter a secure password">
-      <button type="submit" class="block mt-4">Login</button>
-    </form>
-  </div>
+    <input type="email" required name="email" value="{{email}}" class="form-field mt-4" placeholder="enter your email">
+    <input type="password" required name="password" value="{{password}}" class="form-field mt-2" placeholder="enter a secure password">
+    <button type="submit" class="submit-btn block mt-4 w-full">Login</button>
+  </form>
 </div>
 {% endblock content %}

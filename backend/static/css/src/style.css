@@ -1,3 +1,83 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn-default {
+  @apply pointer-events-auto rounded-md px-4 py-2 text-center font-medium shadow-sm ring-1 ring-slate-900 hover:bg-slate-900 hover:text-white
+}
+
+/* --------------------------------------------------- ADMIN -------------------------------------------------------- */
+.admin-link {
+  @apply text-blue-500;
+}
+
+/* ------------------------------------------------- DASHBOARD ------------------------------------------------------ */
+
+/* -------------------------------------------- ADMIN & DASHBOARD --------------------------------------------------- */
+.header-link {
+  @apply px-3 py-2 text-sm font-medium text-gray-200 rounded-md hover:bg-gray-700 hover:text-white;
+}
+
+.mobile-header-link {
+  @apply text-white block rounded-md px-3 py-2 text-base font-medium;
+}
+
+.sub-header-link {
+  @apply block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-700 hover:text-white;
+}
+
+/* --------------------------------------------------- FORMS -------------------------------------------------------- */
+.form-field-error {
+  @apply bg-red-500 text-white hover:bg-red-700 rounded px-1;
+}
+
+.form-label {
+  @apply text-slate-600 block;
+}
+
+.form-field {
+  @apply w-full px-2 block rounded border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
+         placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6;
+}
+
+.form-select-field {
+  @apply focus:outline-none focus:ring-2 focus:ring-sky-600 text-gray-700 py-1 px-3 border border-gray-300
+         bg-white rounded cursor-pointer;
+}
+
+.form-boolean-field {
+  @apply appearance-none h-4 w-4 border border-gray-300 bg-white checked:bg-orange-800 checked:border-orange-900
+         focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left mr-2
+         cursor-pointer rounded;
+}
+
+.cancel-btn {
+  @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer;
+}
+
+.edit-btn {
+  @apply bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer;
+}
+
+.submit-btn {
+  @apply inline-flex justify-center rounded-lg text-sm font-semibold py-2 px-4 bg-slate-900 text-white hover:bg-slate-700
+}
+
+.auth-form {
+  width: 270px;
+}

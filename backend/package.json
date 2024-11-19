@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "manage front packages",
   "scripts": {
-    "dev:tailwind": "tailwindcss -i ./static/css/src/style.css -o ./static/css/main.css --watch",
-    "build:tailwind": "tailwindcss -i ./static/css/src/style.css -o ./static/css/main.css --minify"
+    "dev:tailwind": "tailwindcss -i ./static/css/src/style.css -o ./static/css/main.css --watch --postcss",
+    "build:tailwind": "tailwindcss -i ./static/css/src/style.css -o ./static/css/main.css --minify --postcss"
   },
   "devDependencies": {
     "tailwindcss": "^3.0.0",

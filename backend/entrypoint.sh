@@ -24,9 +24,12 @@ if ! alembic upgrade head; then
 fi
 echo "$(date) - Alembic migrations applied successfully!"
 
-if [[ $APP_ENVIRONMENT = "production" ]]
-then
-    npm run build:tailwind
+echo "$(date) - Building Tailwind CSS..."
+if [[ $APP_ENVIRONMENT = "production" ]]; then
+    if ! npm run build:tailwind ; then
+    echo "$(date) - Tailwind build failed!"
+        exit 1
+    fi
 else
     npm run dev:tailwind
 fi
