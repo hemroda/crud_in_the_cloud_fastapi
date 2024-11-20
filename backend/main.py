@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
@@ -20,18 +20,19 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app
 app = FastAPI(lifespan=lifespan, title=settings.PROJECT_TITLE, version=settings.PROJECT_VERSION)
 
-
-# Serve static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
+origins = settings.ALLOW_ORIGINS_LIST.split(" ")
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOW_ORIGINS_LIST.split(" "),
-    allow_methods=["GET", "POST"],
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
+# Serve static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Include routers for different modules
 app.include_router(login.router)
