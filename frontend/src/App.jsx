@@ -1,12 +1,11 @@
 import './App.css'
+import Header from "./components/Header.jsx";
 import UserList from "./components/Users.jsx";
 
 function App() {
   return (
     <>
-      <header>
-        <h1 className="text-3xl font-bold">Crud@Cloud</h1>
-      </header>
+      <Header />
       <div className="users-list">
         <UserList />
       </div>

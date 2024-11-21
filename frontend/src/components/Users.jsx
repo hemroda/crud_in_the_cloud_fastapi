@@ -28,14 +28,15 @@ const UserList = () => {
   }, []);
 
   return (
-      <div className="mt-10">
+      <div className="flex flex-col md:flex-row md:gap-6 mt-32">
         <AddUserForm addUser={addUser} />
-        <h2>Users List</h2>
-        <ul>
-          {users.map((user) => (
+        <div>
+          <ul>
+            {users.map((user) => (
               <li key={user.id} className="card">{user.email}</li>
-          ))}
-        </ul>
+            ))}
+          </ul>
+        </div>
       </div>
   )
 };

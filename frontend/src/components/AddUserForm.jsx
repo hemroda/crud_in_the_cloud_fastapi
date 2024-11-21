@@ -14,7 +14,7 @@ const AddUserForm = ({addUser}) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col my-2 space-y-2">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-6">
       <input
         type="text"
         value={userEmail}
@@ -29,7 +29,7 @@ const AddUserForm = ({addUser}) => {
         placeholder="User password"
         className="form-field"
       />
-      <button type="submit">Add User</button>
+      <button type="submit" className="submit-btn">Add User</button>
     </form>
   )
 };
