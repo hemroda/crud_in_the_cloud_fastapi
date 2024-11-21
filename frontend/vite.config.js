@@ -9,5 +9,19 @@ export default defineConfig({
     watch: {
       usePolling: true
     }
+  },
+  // Explicitly define the entry point
+  resolve: {
+    alias: {
+      '@': '/src'
+    }
+  },
+  // Specify the entry point
+  build: {
+    rollupOptions: {
+      input: {
+        main: './index.html'  // Adjust this path if your index.html is in a different location
+      }
+    }
   }
 })
