@@ -3,87 +3,87 @@
 {% block title %}Crud@Cloud{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mt-8 md:mt-44 mb-60 mx-2 md:mx-auto">
-  <!-- HERO SECTION -->
-  <div class="intro md:flex justify-between items-center">
-    <div>
-      <p>Hello 👋, I am </p>
-      <div class="mt-4 mb-6">
-        <h2 class="text-6xl font-light text-gray-900">
+  <div class="max-w-6xl mt-8 md:mt-44 mb-60 mx-2 md:mx-auto">
+    <!-- HERO SECTION -->
+    <div class="intro md:flex justify-between items-center">
+      <div>
+        <p>Hello 👋, I am </p>
+        <div class="mt-4 mb-6">
+          <h2 class="text-6xl font-light text-gray-900">
             Hemroda Martin.
-        </h2>
-        <h2 class="text-4xl font-light text-gray-700">
+          </h2>
+          <h2 class="text-4xl font-light text-gray-700">
             I
             <span class="font-semibold text-gray-900">
-                <a
-                    href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete"
-                    target="_blank"
-                    >CRUD</a
-                >
+              <a
+                href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete"
+                target="_blank"
+              >CRUD</a
+              >
             </span>
             things on & for the web.
-        </h2>
+          </h2>
+        </div>
+        <p class="mb-2">
+          A self-taught "full-🥩" Ruby on Rails developer based in Paris.
+        </p>
+        <p>Currently, I focused on Python, FastAPI, Flask, and Django ecosystem.</p>
       </div>
-      <p class="mb-2">
-        A self-taught "full-🥩" Ruby on Rails developer based in Paris.
-      </p>
-      <p>Currently, I focused on Python, FastAPI, Flask, and Django ecosystem.</p>
+      <div class="hidden md:w-64 md:flex justify-center md:justify-end">
+        <img src="{{ url_for('static', path='img/avatar.jpeg') }}" alt="avatar image">
+      </div>
     </div>
-    <div class="hidden md:w-64 md:flex justify-center md:justify-end">
-      <img src="{{ url_for('static', path='img/avatar.jpeg') }}" alt="avatar image">
-    </div>
-  </div>
 
-  <!-- AROUND THE WEB SECTION -->
-  <div class="mt-32">
+    <!-- AROUND THE WEB SECTION -->
+    <div class="mt-32">
       <h2 class="text-4xl font-light tracking-tight text-slate-900">
-          Me around the web
+        Me around the web
       </h2>
       <div class="flex gap-x-6 mt-10">
-          <a href="https://gitlab.com/khaargal" target="_blank">
-              <img
-                  src="{{ url_for('static', path='img/on-the-web/gitlab.svg') }}"
-                  alt="Gitlab logo"
-                  class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
-              />
-          </a>
+        <a href="https://gitlab.com/khaargal" target="_blank">
+          <img
+            src="{{ url_for('static', path='img/on-the-web/gitlab.svg') }}"
+            alt="Gitlab logo"
+            class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
+          />
+        </a>
 
-          <a href="https://github.com/hemroda" target="_blank">
-              <img
-                  src="{{ url_for('static', path='img/on-the-web/github.svg') }}"
-                  alt="Github logo"
-                  class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
-              />
-          </a>
-          <a
-              href="https://www.linkedin.com/in/hemrodamartin/"
-              target="_blank"
-          >
-              <img
-                  src="{{ url_for('static', path='img/on-the-web/linkedin.svg') }}"
-                  alt="LinkedIn logo"
-                  class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
-              />
-          </a>
-          <a href="https://hachyderm.io/@hemroda" target="_blank">
-              <img
-                  src="{{ url_for('static', path='img/on-the-web/mastodon.svg') }}"
-                  alt="Mastodon logo"
-                  class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
-              />
-          </a>
-          <a href="https://twitter.com/hemroda" target="_blank">
-              <img
-                  src="{{ url_for('static', path='img/on-the-web/twitter.svg') }}"
-                  alt="Twitter logo"
-                  class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
-              />
-          </a>
-          <!-- <a href="#" target="_blank">
-      <img src="{{ url_for('static', path='img/on-the-web/ile-text.svg') }}" alt="File icon for CV"
-        class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5" />
-    </a> -->
+        <a href="https://github.com/hemroda" target="_blank">
+          <img
+            src="{{ url_for('static', path='img/on-the-web/github.svg') }}"
+            alt="Github logo"
+            class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
+          />
+        </a>
+        <a
+          href="https://www.linkedin.com/in/hemrodamartin/"
+          target="_blank"
+        >
+          <img
+            src="{{ url_for('static', path='img/on-the-web/linkedin.svg') }}"
+            alt="LinkedIn logo"
+            class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
+          />
+        </a>
+        <a href="https://hachyderm.io/@hemroda" target="_blank">
+          <img
+            src="{{ url_for('static', path='img/on-the-web/mastodon.svg') }}"
+            alt="Mastodon logo"
+            class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
+          />
+        </a>
+        <a href="https://twitter.com/hemroda" target="_blank">
+          <img
+            src="{{ url_for('static', path='img/on-the-web/twitter.svg') }}"
+            alt="Twitter logo"
+            class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5"
+          />
+        </a>
+        <!-- <a href="#" target="_blank">
+          <img src="{{ url_for('static', path='img/on-the-web/ile-text.svg') }}" alt="File icon for CV"
+            class="m-auto md:m-0 w-8 md:w-10 hover:p-0.5" />
+        </a> -->
       </div>
+    </div>
   </div>
-</div>
 {% endblock content %}

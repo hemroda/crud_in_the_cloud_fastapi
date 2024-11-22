@@ -70,10 +70,11 @@ def get_current_user(
 
 
 # Login Routes
-import json
 from fastapi.templating import Jinja2Templates
 from fastapi import Request, responses, Form
+from fastapi.responses import HTMLResponse
 from pydantic import ValidationError
+from typing import Optional
 
 from schemas.user import UserCreate
 from service.user import UserService
@@ -82,9 +83,11 @@ from service.user import UserService
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/register")
+@router.get("/register", response_class=HTMLResponse)
 def register(request: Request):
-    return templates.TemplateResponse(request=request, name="auth/register.html")
+    return templates.TemplateResponse(
+        request=request, name="auth/register.html",
+    )
 
 
 @router.post("/register")
@@ -99,7 +102,7 @@ def register(
         UserService.create_user(user=user_data, db=db)
 
         return responses.RedirectResponse(
-            "/?alert=Successfully%20Registered",
+            "/login/?alert=Successfully%20Registered",
             status_code=status.HTTP_302_FOUND
         )
     except ValidationError as e:
@@ -128,9 +131,12 @@ def register(
         )
 
 
-@router.get("/login")
-def login(request: Request):
-    return templates.TemplateResponse(request=request, name="auth/login.html")
+@router.get("/login", response_class=HTMLResponse)
+def login(request: Request, alert: Optional[str] = None):
+    return templates.TemplateResponse(
+        request=request, name="auth/login.html",
+        context={"alert": alert}
+    )
 
 
 @router.post("/login")
