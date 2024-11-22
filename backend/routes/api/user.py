@@ -122,7 +122,7 @@ def patch_user(
     "/{user_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete an user",
-    response_description="User succesfully deleted"
+    response_description="User successfully deleted"
 )
 def delete_user(
     user_id: int,

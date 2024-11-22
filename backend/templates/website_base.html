@@ -21,7 +21,7 @@
 <body>
   {% include "partials/header.html" %}
 
-  <main class="mx-auto max-w-5xl">
+  <main class="h-screen mx-auto max-w-5xl">
     {% with alert=alert %}
       {% include "partials/notification.html" %}
     {% endwith %}
@@ -29,6 +29,7 @@
     {% block content %}{% endblock content %}
   </main>
 
+  {% include "partials/footer.html" %}
   <script src="{{ url_for('static', path='js/main.js')}}"></script>
 </body>
 </html>

@@ -127,7 +127,7 @@
 #     "/{book_id}",
 #     status_code=status.HTTP_204_NO_CONTENT,
 #     summary="Delete a book",
-#     response_description="Book succesfully deleted"
+#     response_description="Book successfully deleted"
 # )
 # def delete(
 #     book_id: int = Path(..., ge=1),

@@ -9,7 +9,6 @@ from sqlalchemy.orm import Session
 
 from core.database import get_db
 from service.task import TaskService
-from models.user import User
 from schemas.task import TaskCreate
 from routes.login import get_current_user
 from core.config import settings

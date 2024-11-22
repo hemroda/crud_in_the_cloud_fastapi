@@ -71,7 +71,7 @@ body {
 }
 
 .cancel-btn {
-  @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer;
+  @apply  text-red-500 hover:text-white hover:bg-red-700 font-bold py-2 px-4 rounded cursor-pointer;
 }
 
 .edit-btn {

@@ -122,7 +122,7 @@ def patch_article(
     "/{article_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete an article",
-    response_description="Article succesfully deleted"
+    response_description="Article successfully deleted"
 )
 def delete_article(
     article_id: int,

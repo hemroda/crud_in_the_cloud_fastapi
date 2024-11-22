@@ -143,7 +143,7 @@ def patch_task(
     "/{task_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete an task",
-    response_description="Task succesfully deleted"
+    response_description="Task successfully deleted"
 )
 def delete_task(task_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Delete a task by its ID."""

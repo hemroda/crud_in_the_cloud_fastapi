@@ -159,9 +159,20 @@ def login(
 
     access_token = create_access_token(data={"sub": user.email})
     response = responses.RedirectResponse(
-        "/?alert=Successfully Logged in",
+        "/dashboard/?alert=Successfully Logged in",
         status_code=status.HTTP_302_FOUND
     )
     response.set_cookie(key="access_token", value=f"Bearer {access_token}")
 
+    return response
+
+
+@router.get("/logout")
+def logout(request: Request):
+    response = responses.RedirectResponse(
+        "/?alert=Successfully%20Logged%20out",
+        status_code=status.HTTP_302_FOUND
+    )
+    # Clear the access_token cookie
+    response.delete_cookie(key="access_token")
     return response
