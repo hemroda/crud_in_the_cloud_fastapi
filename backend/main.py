@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 
 from core.config import settings
 from routes import login
+from routes import utils
 from routes.api import article as api_article, task as api_task, user as api_user
 from routes.web import article as web_article, task as web_task, website
 
@@ -36,6 +37,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Include routers for different modules
 app.include_router(login.router)
+app.include_router(utils.router)
 app.include_router(api_article.router)
 app.include_router(api_task.router)
 app.include_router(api_user.router)
