@@ -70,6 +70,8 @@ def get_current_user(
 
 
 # Login Routes
+import re
+
 from fastapi.templating import Jinja2Templates
 from fastapi import Request, responses, Form
 from fastapi.responses import HTMLResponse
@@ -146,25 +148,42 @@ def login(
     password: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    errors = []
-    user = authenticate_user(email, password, db)
+    try:
+        user = authenticate_user(email, password, db)
+        access_token = create_access_token(data={"sub": user.email})
 
-    if not user:
-        errors.append("Incorrect email or password")
-
-        return templates.TemplateResponse(
-            request=request, name="auth/login.html",
-            context={ "errors": errors }
+        response = responses.RedirectResponse(
+            "/dashboard/?alert=Successfully Logged in",
+            status_code=status.HTTP_302_FOUND
         )
+        response.set_cookie(key="access_token", value=f"Bearer {access_token}")
 
-    access_token = create_access_token(data={"sub": user.email})
-    response = responses.RedirectResponse(
-        "/dashboard/?alert=Successfully Logged in",
-        status_code=status.HTTP_302_FOUND
-    )
-    response.set_cookie(key="access_token", value=f"Bearer {access_token}")
+        return response
 
-    return response
+    except ValidationError as e:
+        # Parse Pydantic validation errors
+        errors = [
+            f"{error['loc'][0]}: {error['msg']}"
+            for error in e.errors()
+        ]
+        return templates.TemplateResponse(
+            "auth/login.html",
+            {
+                "request": request,
+                "errors": errors,
+                "email": email  # Preserve entered email
+            }
+        )
+    except Exception as e:
+        # Handle other unexpected errors
+        return templates.TemplateResponse(
+            "auth/login.html",
+            {
+                "request": request,
+                "errors": [re.sub(r"^\d+:\s*", "", str(e))],
+                "email": email
+            }
+        )
 
 
 @router.get("/logout")
