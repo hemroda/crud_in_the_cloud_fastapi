@@ -1,34 +1,22 @@
-# from datetime import date, datetime
-# from typing import Optional
-# from sqlalchemy import Column, Integer, String, Sequence
+from datetime import datetime
+from sqlalchemy import Column, Integer, Text, String, Boolean, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
+from typing import Optional
 
-# from models.base_class import Base
-
-# class BookBase(Base):
-#     pass
-
-# class Book():
-#     pass
-
-# class BookCreate(BookBase):
-#     pass
-
-# # class BookBase(Base):
-# #     title: str = Column(String)
-# #     author: str = Column(String)
-# #     description: Optional[str] = None
-# #     price: Optional[float] = Column(default=None)
+from models.base_class import Base
 
 
-# # class Book(BookBase, table=True):
-# #     id: Optional[int] = Column(default=None, primary_key=True)
-# #     created_at: datetime = Column(default_factory=datetime.utcnow)
-# #     updated_at: datetime = Column(default_factory=datetime.utcnow)
+class Book(Base):
+    __tablename__ = "books"
 
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    author = Column(String, nullable=False)
+    description = Optional[str] = Column(Text, nullable=True)
+    published_year = Optional[int] = Column(DateTime, nullable=True)
+    done = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.now)
 
-# # class BookUpdate(sqlalchemy):
-# #     title: Optional[str] = Column(default=None, min_length=1)
-# #     author: Optional[str] = Column(default=None, min_length=1)
-# #     description: Optional[str] = None
-# #     price: Optional[float] = Column(default=None, ge=0)
-# #     published_year: Optional[int] = Column(default_factory=lambda: date.today().year)
+    # # Creator relationship
+    # creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    # creator = relationship("User", back_populates="created_tasks", foreign_keys=[creator_id])
