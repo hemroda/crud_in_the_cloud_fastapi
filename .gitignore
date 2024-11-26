@@ -6,6 +6,10 @@ node_modules
 
 test_db.db
 
+### DATA Eng ###
+#################
+/data.dump
+
 ### Terraform ###
 #################
 # Local .terraform directories
