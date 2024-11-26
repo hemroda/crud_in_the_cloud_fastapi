@@ -106,7 +106,7 @@ When creating the server:
  docker-compose up -d --build
 ```
 
-## Specs
+### Specs
 
 * Run all the specs in Docker
 
@@ -118,6 +118,40 @@ docker-compose exec backend pytest -v
 ```sh
 docker-compose exec backend pytest -v test/unit/service/*.py
 ```
+
+### DATA
+
+- Access the DB
+
+```sh
+docker-compose exec postgres psql --username=pguser --dbname=data_db
+```
+
+#### Access pgAdmin for DATA
+
+Go to `http://localhost:8080/login`
+
+Use the following logins:
+
+    - user/email: admin@users.com
+
+    - password: adminpassword
+
+When creating the server:
+    - General tab:
+
+        - name: server
+
+    - Connection tab:
+
+        - Host name/address: postgres
+
+        - Username: pguser
+
+        - Password: pguserpassword
+
+        ⚠️ The other fields do not change
+
 
 ## Gotchas
 
