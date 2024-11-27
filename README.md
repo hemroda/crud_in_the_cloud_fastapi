@@ -60,6 +60,8 @@ crud_in_the_cloud_db=# \dt
 
 #### Migrations - Alembic
 
+⚠️ Before running the command for the migrations, make sure you added the new models in `backend/models/base.py`
+
 ```sh
 alembic revision --autogenerate -m "the message you want"
 ```

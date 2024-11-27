@@ -1,5 +1,5 @@
 from typing import Optional, Text
-from pydantic import BaseModel, constr, root_validator
+from pydantic import BaseModel, constr
 from datetime import datetime
 
 
@@ -19,7 +19,7 @@ class TaskShow(BaseModel):
     creator_id: int
     owner_id: Optional[int]
 
-    class Config():
+    class Config:
         from_attributes = True
 
 
