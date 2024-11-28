@@ -9,7 +9,7 @@ class Book(Base):
     __tablename__ = "books"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, nullable=False)
+    title = Column(String, index=True, nullable=False, unique=True)
     description: Optional[str] = Column(Text, nullable=True)
     added_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, nullable=True)

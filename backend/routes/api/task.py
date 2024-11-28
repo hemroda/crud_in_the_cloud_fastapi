@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from schemas.task import TaskCreate, TaskUpdate, TaskShow
 from core.database import get_db
-from service.task import TaskService
 from models.user import User
 from routes.login import get_current_user
+from schemas.task import TaskCreate, TaskUpdate, TaskShow
+from service.task import TaskService
 
 
 router = APIRouter(
@@ -81,10 +81,11 @@ def create_task(
     current_user: User = Depends(get_current_user),
     response: Response = None
 ) -> TaskShow:
-    """Create an task"""
+    """Create a task"""
     try:
         created_task = TaskService.create_task(task, db, creator_id=current_user.id)
         response.headers["Location"] = f"/tasks/{created_task.id}"
+
         return created_task
     except Exception as e:
         raise HTTPException(

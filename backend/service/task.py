@@ -1,6 +1,6 @@
-from typing import List, Optional
-from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
+from typing import List
 
 from schemas.task import TaskCreate, TaskShow, TaskUpdate
 import data.task as data

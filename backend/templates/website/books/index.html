@@ -1,0 +1,22 @@
+{% extends "website_base.html" %}
+
+{% block title %}Books - Crud@Cloud{% endblock %}
+
+{% block content %}
+  <div class="max-w-6xl mt-8 md:mt-10 mb-60 mx-2 md:mx-auto">
+    <div class="mt-20">
+      <div class="flex justify-between items-center">
+        <h2 class="text-4xl font-light tracking-tight text-slate-900">
+          Books
+        </h2>
+        <a href="/books/new" class="btn-default">+ New</a>
+      </div>
+      <div class="mt-10 mb-5">
+        {% for book in books %}
+          <h3 class="mt-4"><a href="/books/{{ book.id }}">{{ book.title }}</a></h3>
+          <small>{{ book.author }} {{ book.published_year }}</small>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

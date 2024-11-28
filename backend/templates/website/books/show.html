@@ -1,0 +1,28 @@
+{% extends "website_base.html" %}
+
+{% block title %}New Books - Crud@Cloud{% endblock %}
+
+{% block content %}
+  <div class="max-w-6xl mt-8 md:mt-10 mb-60 mx-2 md:mx-auto">
+    <div class="mt-20">
+      <div class="flex justify-between items-center">
+        <h2 class="text-4xl font-light tracking-tight text-slate-900">
+          {{ book.title }}
+        </h2>
+        <div class="flex items-center gap-4">
+          <a href="/books/{{ book.id }}/edit" class="btn-default">Edit book</a>
+          <form action="/books/{{ book.id }}/delete" method="post"
+                onsubmit="return confirm('Are you sure you want to delete this book?');">
+            <button type="submit" class=cancel-btn">
+              Delete Book
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="mt-10 mb-5">
+        <p><small>{{ book.author }} {{ book.published_year }}</small></p>
+        <p class="mt-4">{{ book.description }}</p>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

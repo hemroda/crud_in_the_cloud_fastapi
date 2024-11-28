@@ -1,79 +1,60 @@
-# from datetime import datetime
-# from fastapi import Depends, HTTPException
-# from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-# from models.book import Book, BookCreate, BookUpdate
+from models.book import Book
+from schemas.book import BookCreate, BookShow, BookUpdate
 
 
-# def get_all(session: Session = Depends(get_session), skip: int = 0, limit: int = 100) -> list[Book]:
-#     statement = select(Book).offset(skip).limit(limit)
-#     books = session.exec(statement).all()
-#     return [Book(title=book.title, description=book.description,id=book.id) for book in books]
+def db_get_books(db: Session, skip: int = 0, limit: int = 10) -> list[BookShow]:
+    """Retrieve all books"""
+    books = db.query(Book).offset(skip).limit(limit).all()
 
-# def get_one_by_id(book_id: int, session: Session) -> Book | None:
-#     statement = select(Book).where(Book.id == book_id)
-#     book = session.exec(statement).one_or_none()
-#     return book
+    return books
 
-# def create(book_data: BookCreate, session: Session) -> Book:
-#     """Create a new book"""
-#     db_book = Book.from_orm(book_data)
-#     db_book.created_at = datetime.utcnow()
-#     db_book.updated_at = datetime.utcnow()
 
-#     session.add(db_book)
-#     session.commit()
-#     session.refresh(db_book)
+def db_get_book_by_id(book_id: int, db: Session) -> Book:
+    """Retrieve a single book by its ID."""
+    book = db.query(Book).filter(Book.id == book_id).first()
 
-#     return db_book
+    return book
 
-# def modify(book_id: int, book_update: BookUpdate, session: Session) -> Book:
-#     """Partially modify a book"""
-#     db_book = get_one_by_id(book_id, session)
-#     if not db_book:
-#         raise HTTPException(status_code=404, detail=f"Book with id {book_id} not found")
 
-#     update_data = book_update.dict(exclude_unset=True)
-#     for field, value in update_data.items():
-#         setattr(db_book, field, value)
+def db_create_book(book_data: BookCreate, db: Session) -> Book:
+    """Create a new book"""
+    db_book = Book(**book_data.dict())
+    try:
+        db.add(db_book)
+        db.commit()
+        db.refresh(db_book)
 
-#     db_book.updated_at = datetime.utcnow()
+        return db_book
+    except Exception as e:
+        db.rollback()
+        raise Exception(f"Failed to create book: {str(e)}")
 
-#     session.add(db_book)
-#     session.commit()
-#     session.refresh(db_book)
 
-#     return db_book
+def db_update_book(book_id: int, book_data: BookUpdate, db: Session) -> Book:
+    """Update a book"""
+    db_book = db_get_book_by_id(book_id, db)
 
-# def replace(book_id: int, book_data: BookCreate, session: Session) -> Book:
-#     """Completely replace a book"""
-#     # Get existing book
-#     db_book = get_one_by_id(book_id, session)
-#     if not db_book:
-#         raise HTTPException(status_code=404, detail=f"Book with id {book_id} not found")
+    if db_book:
 
-#     # Update all fields
-#     book_dict = book_data.dict()
-#     for field, value in book_dict.items():
-#         setattr(db_book, field, value)
+        for key, value in book_data.items():
+            if value is not None:
+                setattr(db_book, key, value)
 
-#     # Update timestamp
-#     db_book.updated_at = datetime.now(datetime.timezone.utc)
+        db.commit()
+        db.refresh(db_book)
 
-#     session.add(db_book)
-#     session.commit()
-#     session.refresh(db_book)
+    return db_book
 
-#     return db_book
 
-# def delete(book_id: int, session: Session) -> bool:
-#     """Delete a book"""
+def db_delete_book(book_id: int, db: Session) -> bool:
+    """Delete a book"""
+    book = db_get_book_by_id(book_id, db)
 
-#     db_book = get_one_by_id(book_id, session)
-#     if not db_book:
-#         return False
+    if book:
+        db.delete(book)
+        db.commit()
+        return True
 
-#     session.delete(db_book)
-#     session.commit()
-
-#     return True
+    return False

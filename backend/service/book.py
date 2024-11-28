@@ -1,21 +1,80 @@
-from models.book import Book
+from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
+from typing import List
+
+from schemas.book import BookCreate, BookShow, BookUpdate
 import data.book as data
 
 
-def get_all() -> list[Book]:
-    return data.get_all()
+class BookService:
 
-def get_one_by_id(id: int) -> Book | None:
-    return data.get_one(id)
+    @staticmethod
+    def get_books(db: Session, skip: int = 0, limit: int = 10) -> List[BookShow]:
+        return data.db_get_books(db, skip, limit)
 
-def create(book: Book) -> Book:
-    return data.create(book)
 
-def replace(id, book: Book) -> Book:
-    return data.replace(id, book)
+    @staticmethod
+    def create_book(book: BookCreate, db: Session, ) -> BookShow:
+        try:
+            return data.db_create_book(book, db)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to create book: {str(e)}"
+            )
 
-def modify(id, book: Book) -> Book:
-    return data.modify(id, book)
 
-def delete(id: int) -> bool:
-    return data.delete(id)
+    @staticmethod
+    def get_book_by_id(book_id: int, db: Session) -> BookShow:
+        book = data.db_get_book_by_id(book_id, db)
+
+        if not book:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"book with id {book_id} not found"
+            )
+
+        return book
+
+
+    @staticmethod
+    def update_book(
+        book_id,
+        book_data: BookUpdate,
+        db: Session,
+        partial: bool = False
+    ) -> BookShow:
+        existing_book = data.db_get_book_by_id(book_id, db)
+
+        if not existing_book:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Book with ID {book_id} not found"
+            )
+
+        # Convert book_data to dict, excluding None values if partial update
+        update_data = book_data.model_dump(
+            exclude_unset=partial,  # True for PATCH, False for PUT
+            exclude_none=partial
+        )
+
+        try:
+            updated_book = data.db_update_book(book_id, update_data, db)
+
+            return updated_book
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to update the book: {str(e)}"
+            )
+
+
+    @staticmethod
+    def delete_book(book_id: int, db: Session) -> bool:
+        if not data.db_delete_book(book_id, db):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Book with id {book_id} not found"
+            )
+
+        return True

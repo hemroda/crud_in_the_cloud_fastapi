@@ -1,0 +1,63 @@
+{% extends "website_base.html" %}
+
+{% block title %}New Books - Crud@Cloud{% endblock %}
+
+{% block content %}
+  <div class="max-w-6xl mt-8 md:mt-10 mb-60 mx-2 md:mx-auto">
+    <div class="mt-20">
+      <div class="flex justify-between items-center">
+        <h2 class="text-4xl font-light tracking-tight text-slate-900">
+          Edit a book
+        </h2>
+        <a href="/books/" class="btn-default">All books</a>
+      </div>
+      <div class="mt-10 mb-5">
+        {% if errors %}
+          <div class="mt-6">
+            {% for error in errors %}
+              <p class="form-field-error">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" class="max-w-2xl mt-4 mx-auto">
+          <!-- Title -->
+          <input
+            type="text"
+            required
+            name="title"
+            value="{{ title }}"
+            class="form-field mt-4"
+            placeholder="Enter a title for the book"
+          >
+
+          <!-- Publication Year -->
+          <input
+            type="number"
+            required
+            name="published_year"
+            value="{{ published_year }}"
+            class="form-field mt-2"
+            placeholder="Publication year"
+          >
+
+          <!-- Description (Optional) -->
+          <textarea
+            name="description"
+            class="form-field mt-2"
+            placeholder="Add a description (optional)"
+          >{{ description }}</textarea>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="submit-btn w-full mt-4"
+          >
+            Update book
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock content %}

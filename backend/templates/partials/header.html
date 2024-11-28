@@ -4,8 +4,9 @@
     <ul class="flex gap-3 items-center">
       <li><a href="/portfolio/">Portfolio</a></li>
       {% if current_user %}
-        <li><a href="/articles/">Blog</a></li>
-        <li><a href="/tasks/">Tasks</a></li>
+        <li class="hover:underline-offset-2"><a href="/articles/">Blog</a></li>
+        <li class="hover:underline-offset-2"><a href="/books/">Books</a></li>
+        <li class="hover:underline-offset-2"><a href="/tasks/">Tasks</a></li>
         <li class="ml-4"><a href="/dashboard" class="btn-default">Dashboard</a></li>
       {% else %}
         <li class="ml-4"><a href="/login/" class="btn-default">Login</a></li>

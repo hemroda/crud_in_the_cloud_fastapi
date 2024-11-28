@@ -8,8 +8,10 @@ from contextlib import asynccontextmanager
 
 from core.config import settings
 from routes import login, utils
-from routes.api import article as api_article, task as api_task, user as api_user
-from routes.web import article as web_article, dashboard, task as web_task, website
+from routes.api import article as api_article, book as api_book, task as api_task, \
+    user as api_user
+from routes.web import article as web_article, book as web_book, dashboard, \
+    task as web_task, website
 
 
 @asynccontextmanager
@@ -18,7 +20,8 @@ async def lifespan(app: FastAPI):
 
 
 # Initialize the FastAPI app
-app = FastAPI(lifespan=lifespan, title=settings.PROJECT_TITLE, version=settings.PROJECT_VERSION)
+app = FastAPI(lifespan=lifespan, title=settings.PROJECT_TITLE,
+              version=settings.PROJECT_VERSION)
 
 origins = settings.ALLOW_ORIGINS_LIST.split(" ")
 
@@ -39,15 +42,17 @@ app.include_router(dashboard.router)
 app.include_router(login.router)
 app.include_router(utils.router)
 app.include_router(api_article.router)
+app.include_router(api_book.router)
 app.include_router(api_task.router)
 app.include_router(api_user.router)
 app.include_router(web_article.router)
+app.include_router(web_book.router)
 app.include_router(web_task.router)
 app.include_router(website.router)
 
 
 # System
-@app.get("/health", tags=["System"],)
+@app.get("/health", tags=["System"], )
 async def health_check():
     health_status = {
         "status": "healthy",
@@ -81,4 +86,5 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("main:app", reload=True)

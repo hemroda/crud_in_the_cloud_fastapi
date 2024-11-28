@@ -1,43 +1,44 @@
-# from fastapi import APIRouter, Depends, HTTPException, Path, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Path, Response, status
+from sqlalchemy.orm import Session
+from typing import List
 
-# from models.book import Book
-# import data.book as service
+from core.database import get_db
+from models.book import Book
+from schemas.book import BookCreate, BookUpdate, BookShow
+from service.book import BookService
 
-# router = APIRouter(
-#     prefix = "/books",
-#     tags=["Books"],
-#     responses={
-#         status.HTTP_404_NOT_FOUND: {"description": "Book not found"},
-#         status.HTTP_500_INTERNAL_SERVER_ERROR: {"description": "Internal server error"},
-#     }
-# )
 
-# @router.get(
-#     "/",
-#     response_model=list[Book],
-#     status_code=status.HTTP_200_OK,
-#     summary="Get all books",
-#     response_description="List of all books"
-# )
-# def get_all(
-#         session: Session = Depends(get_session),
-#         skip: int = 0,
-#         limit: int = 100
-#     ) -> list[Book]:
-#     """
-#     Retrieve all books with optional filtering and pagination.
+router = APIRouter(
+    prefix="/api/books",
+    tags=["API - Books"],
+    responses={
+        status.HTTP_404_NOT_FOUND: {"description": "Book not found"},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {"description": "Internal server error"},
+    }
+)
 
-#     Parameters:
-#         skip: Number of records to skip
-#         limit: Maximum number of records to return
-#     """
-#     try:
-#         return service.get_all(session, skip=skip, limit=limit)
-#     except Exception as e:
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-#             detail=f"Error retrieving books: {str(e)}"
-#         )
+
+@router.get(
+    "/",
+    response_model=list[BookShow],
+    status_code=status.HTTP_200_OK,
+    summary="Get all books",
+    response_description="List of all books"
+)
+def get_books(
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100
+) -> list[Book]:
+    """Retrieve all books with optional filtering and pagination."""
+    try:
+        return BookService.get_books(db, skip=skip, limit=limit)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error retrieving books: {str(e)}"
+        )
+
 
 # @router.get(
 #     "/{book_id}",
@@ -48,7 +49,7 @@
 # )
 # def get_one_by_id(
 #     book_id: int = Path(..., title="Book ID", ge=1),
-#     session: Session = Depends(get_session)
+#     db: Session = Depends(get_db)
 # ) -> Book:
 #     """Retrieve a specific book by its ID."""
 #     try:
@@ -67,28 +68,29 @@
 #             detail=f"Error retrieving book: {str(e)}"
 #         )
 
-# @router.post(
-#     "/",
-#     response_model=Book,
-#     status_code=status.HTTP_201_CREATED,
-#     summary="Create a new book",
-#     response_description="The created book"
-# )
-# def create(
-#     book: Book,
-#     session: Session = Depends(get_session),
-#     response: Response = None
-# ) -> Book:
-#     """Create a new book entry."""
-#     try:
-#         book = service.create(book, session)
-#         response.headers["Location"] = f"/books/{book.id}"
-#         return book
-#     except Exception as e:
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-#             detail=f"Error creating book: {str(e)}"
-#         )
+@router.post(
+    "/",
+    response_model=BookShow,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new book",
+    response_description="The created book"
+)
+def create_book(
+    book: BookCreate,
+    db: Session = Depends(get_db),
+    response: Response = None
+) -> Book:
+    """Create a new book entry."""
+    try:
+        created_book = BookService.create_book(book, db)
+        response.headers["Location"] = f"/books/{created_book.id}"
+
+        return created_book
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error creating book: {str(e)}"
+        )
 
 # @router.patch(
 #     "/",
@@ -100,7 +102,7 @@
 # def modify(
 #     book_id: int = Path(..., ge=1),
 #     book: Book = None,
-#     session: Session = Depends(get_session)
+#     db: Session = Depends(get_db)
 # ) -> Book:
 #     """Partially update a book's information."""
 #     try:
@@ -131,7 +133,7 @@
 # )
 # def delete(
 #     book_id: int = Path(..., ge=1),
-#     session: Session = Depends(get_session)
+#     db: Session = Depends(get_db)
 # ) -> None:
 #     """Delete a book by its ID."""
 #     try:
