@@ -1,19 +1,19 @@
-<!-- TODO: use HTMX to render this closable/toggable -->
-{% if alert %}
+{% if alert or notification %}
   <div
-    id="notification"
+    id="alert-notification"
     class="flex justify-between mx-2 items-center h-12 px-6 font-medium tracking-wide text-white transition
-           duration-200 rounded shadow-md bg-green-400 focus:shadow-outline focus:outline-none"
+           duration-200 rounded shadow-md focus:shadow-outline focus:outline-none
+           {% if alert %} bg-red-400 {% endif %} {% if notification %} bg-green-400 {% endif %}"
     role="alert"
   >
     <div>
-      {{ alert }}
+      {{ alert or notification }}
     </div>
     <div>
       <button
         type="button" class="-m-3 p-3 focus-visible:outline-offset-[-4px]"
         hx-get="/dismiss-notification"
-        hx-target="#notification"
+        hx-target="#alert-notification"
         hx-swap="outerHTML"
       >
         X

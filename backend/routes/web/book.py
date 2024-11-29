@@ -74,6 +74,7 @@ async def create_book(
     description: Optional[str] = Form(None),
     published_year: int = Form(...),
     title: str = Form(...),
+    alert: Optional[str] = None
 ):
     try:
         book_data = BookCreate(title=title, description=description,
@@ -86,9 +87,19 @@ async def create_book(
             context={"book": create_book}
         )
     except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error creating the book: {str(e)}"
+        book_data = BookCreate(title=title, description=description,
+                               published_year=published_year)
+
+        return templates.TemplateResponse(
+            request=request,
+            name="website/books/new.html",
+            context={
+                "alert": e.detail,
+                "title": book_data.title,
+                "description": book_data.description,
+                "published_year": book_data.published_year,
+            },
+            status_code=e.status_code
         )
 
 

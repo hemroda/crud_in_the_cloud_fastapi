@@ -12,17 +12,22 @@ class BookService:
     def get_books(db: Session, skip: int = 0, limit: int = 10) -> List[BookShow]:
         return data.db_get_books(db, skip, limit)
 
-
     @staticmethod
     def create_book(book: BookCreate, db: Session, ) -> BookShow:
         try:
             return data.db_create_book(book, db)
+        except ValueError as ve:
+            # Handle specific case of duplicate book
+            raise HTTPException(
+                # Use 409 Conflict for duplicate resources
+                status_code=status.HTTP_409_CONFLICT,
+                detail=str(ve)
+            )
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to create book: {str(e)}"
             )
-
 
     @staticmethod
     def get_book_by_id(book_id: int, db: Session) -> BookShow:
@@ -35,7 +40,6 @@ class BookService:
             )
 
         return book
-
 
     @staticmethod
     def update_book(
@@ -67,7 +71,6 @@ class BookService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to update the book: {str(e)}"
             )
-
 
     @staticmethod
     def delete_book(book_id: int, db: Session) -> bool:

@@ -19,7 +19,8 @@ router = APIRouter(prefix = "", tags=["Dashboard"],)
 async def dashboard(
     request: Request,
     db: Session = Depends(get_db),
-    alert: Optional[str] = None
+    alert: Optional[str] = None,
+    notification: Optional[str] = None
 ):
     try:
         token = request.cookies.get("access_token")
@@ -37,6 +38,7 @@ async def dashboard(
             "app_environment": settings.APP_ENVIRONMENT,
             "alert": alert,
             "current_user": current_user,
-            "logout": logout
+            "logout": logout,
+            "notification": notification,
         }
     )

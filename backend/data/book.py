@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from models.book import Book
 from schemas.book import BookCreate, BookShow, BookUpdate
@@ -25,8 +26,13 @@ def db_create_book(book_data: BookCreate, db: Session) -> Book:
         db.add(db_book)
         db.commit()
         db.refresh(db_book)
-
         return db_book
+    except IntegrityError as e:
+        db.rollback()
+        # More specific error handling for unique constraint
+        if 'UniqueViolation' in str(e):
+            raise ValueError(f"A book with the title '{book_data.title}' already exists")
+        raise
     except Exception as e:
         db.rollback()
         raise Exception(f"Failed to create book: {str(e)}")

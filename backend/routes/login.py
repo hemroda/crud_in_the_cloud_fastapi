@@ -134,10 +134,10 @@ def register(
 
 
 @router.get("/login", response_class=HTMLResponse)
-def login(request: Request, alert: Optional[str] = None):
+def login(request: Request, notification: Optional[str] = None):
     return templates.TemplateResponse(
         request=request, name="auth/login.html",
-        context={"alert": alert}
+        context={"notification": notification}
     )
 
 
@@ -153,7 +153,7 @@ def login(
         access_token = create_access_token(data={"sub": user.email})
 
         response = responses.RedirectResponse(
-            "/dashboard/?alert=Successfully Logged in",
+            "/dashboard/?notification=Successfully Logged in",
             status_code=status.HTTP_302_FOUND
         )
         response.set_cookie(key="access_token", value=f"Bearer {access_token}")
@@ -189,7 +189,7 @@ def login(
 @router.get("/logout")
 def logout(request: Request):
     response = responses.RedirectResponse(
-        "/?alert=Successfully%20Logged%20out",
+        "/?notification=Successfully%20Logged%20out",
         status_code=status.HTTP_302_FOUND
     )
     # Clear the access_token cookie
